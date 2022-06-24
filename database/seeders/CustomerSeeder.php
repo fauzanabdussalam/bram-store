@@ -16,12 +16,12 @@ class CustomerSeeder extends Seeder
     public function run()
     {
         DB::table('customer')->insert([
-            'email'         => 'budi@gmail.com',
             'name'          => 'budi',
+            'phone'         => '08123456789',
+            'email'         => 'budi@gmail.com',
+            'address'       => 'Komp. Taman Bumi Prima, Jalan Bumi Prima Raya P-7, Cimahi Utara, Kota Cimahi, Jawa Barat 40135',
             'birthdate'     => '2000-01-01',
-            'gender'        => 'Male',
-            'weight'        => 65,
-            'height'        => 170,
+            'gender'        => 'Laki-Laki',
             'password'      => Hash::make('123'),
             'created_at'    => NOW(),
             'updated_at'    => NOW(),

@@ -23,9 +23,9 @@ class CreateTransaksiTable extends Migration
             $table->foreign('id_customer_address')->references('id')->on('customer_address')->onDelete('NO ACTION');
             $table->unsignedBigInteger('id_kategori');
             $table->foreign('id_kategori')->references('id')->on('kategori')->onDelete('NO ACTION');
-            $table->unsignedBigInteger('id_barang');
-            $table->foreign('id_barang')->references('id')->on('barang')->onDelete('NO ACTION');
-            $table->double('harga_barang')->default(0);
+            $table->unsignedBigInteger('id_produk');
+            $table->foreign('id_produk')->references('id')->on('produk')->onDelete('NO ACTION');
+            $table->double('harga_produk')->default(0);
             $table->double('biaya_ongkir')->default(0);
             $table->double('diskon')->default(0);
             $table->double('total_bayar')->default(0);

@@ -17,8 +17,8 @@ class CreateUlasanTable extends Migration
             $table->id();
             $table->unsignedBigInteger('id_customer');
             $table->foreign('id_customer')->references('id')->on('customer')->cascadeOnDelete();
-            $table->unsignedBigInteger('id_barang');
-            $table->foreign('id_barang')->references('id')->on('barang')->cascadeOnDelete();
+            $table->unsignedBigInteger('id_produk');
+            $table->foreign('id_produk')->references('id')->on('produk')->cascadeOnDelete();
             $table->string('nomor_transaksi', 20);
             $table->foreign('nomor_transaksi')->references('nomor_transaksi')->on('transaksi')->cascadeOnDelete();
             $table->unsignedTinyInteger('nilai');

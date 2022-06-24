@@ -16,7 +16,7 @@ class CreateKategoriTable extends Migration
         Schema::create('kategori', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kategori', 100);
-            $table->unsignedTinyInteger('is_barang')->default(0);
+            $table->unsignedTinyInteger('jenis')->default(0);
             $table->text('icon')->nullable();
         });
     }
