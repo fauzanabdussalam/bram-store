@@ -30,14 +30,12 @@ Route::group(['prefix' => 'admin'], function ()
         Route::post('delete', [AdminController::class, 'deleteKategori'])->name('kategori.delete');
     });
 
-    Route::group(['prefix' => 'news'], function () 
+    Route::group(['prefix' => 'pembayaran'], function () 
     {
-        Route::get('/', [AdminController::class, 'news'])->name('news');
-        Route::get('add', [AdminController::class, 'showDataNews'])->name('news.add');
-        Route::get('detail/{id}', [AdminController::class, 'showDataNews'])->name('news.detail');
-        Route::post('save', [AdminController::class, 'saveNews'])->name('news.save');
-        Route::post('delete', [AdminController::class, 'deleteNews'])->name('news.delete');
-        Route::post('recommended', [AdminController::class, 'setRecommendedNews'])->name('news.recommended');
+        Route::get('/', [AdminController::class, 'pembayaran'])->name('pembayaran');
+        Route::post('data', [AdminController::class, 'getDataPembayaran'])->name('pembayaran.data');
+        Route::post('save', [AdminController::class, 'savePembayaran'])->name('pembayaran.save');
+        Route::post('delete', [AdminController::class, 'deletePembayaran'])->name('pembayaran.delete');
     });
 
     Route::group(['prefix' => 'customer'], function () 

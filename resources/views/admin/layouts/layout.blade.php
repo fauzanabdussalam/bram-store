@@ -133,6 +133,9 @@
                             <li>
                                 <a href="{{ Route('dashboard') }}" class="waves-effect  {{{ (Request::is('admin') ? 'active' : '') }}}"><i class="md md-dashboard"></i>Dashboard</a>
                             </li>
+                            <li>
+                                <a href="{{ Route('pembayaran') }}" class="waves-effect  {{{ (Request::segment(2)=='pembayaran' ? 'active' : '') }}}"><i class="md md-payment"></i>Pembayaran</a>
+                            </li>
 
                             <li>
                                 <a href="{{ Route('kategori') }}" class="waves-effect  {{{ (Request::segment(2)=='kategori' ? 'active' : '') }}}"><i class="md md-view-list"></i>Kategori Produk</a>

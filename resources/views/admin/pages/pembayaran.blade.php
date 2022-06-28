@@ -7,10 +7,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="pull-left page-title"><i class="md md-format-quote"></i> Quotes</h4>
+                    <h4 class="pull-left page-title"><i class="md md-payment"></i> Pembayaran</h4>
                     <ol class="breadcrumb pull-right">
                         <li><a href="{{ Route('dashboard') }}">Admin</a></li>
-                        <li class="active">Quotes</li>
+                        <li class="active">Pembayaran</li>
                     </ol>
                 </div>
             </div>
@@ -20,23 +20,25 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="m-b-30">
-                                <button class="btn btn-primary" onclick="add()">Add Quotes <i class="fa fa-plus"></i></button>
+                                <button class="btn btn-primary" onclick="add()">Tambah <i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                     </div>
                     <table class="table table-bordered table-striped" id="datatable">
                         <thead>
                             <tr>
-                                <th>Quotes</th>
-                                <th>Creator</th>
+                                <th>Pembayaran</th>
+                                <th>Nomor Rekening</th>
+                                <th>Atas Nama</th>
                                 <th width="10%">Action</th>
                             </tr>
                         </thead>                  
                         <tbody>
-                            @foreach($quotes as $data)
+                            @foreach($pembayaran as $data)
                             <tr class="gradeX">
-                                <td>{{ $data->quotes }}</td>
-                                <td>{{ $data->creator }}</td>
+                                <td>{{ $data->nama_pembayaran }}</td>
+                                <td>{{ $data->nomor_rekening }}</td>
+                                <td>{{ $data->atas_nama }}</td>
                                 <td class="actions">
                                     <button class="btn btn-icon btn-sm btn-success" onclick="edit({{ $data->id }})"> <i class="fa fa-edit"></i> </button> 
                                     <button class="btn btn-icon btn-sm btn-danger" onclick="deleteData({{ $data->id }})"> <i class="fa fa-trash"></i> </button>
@@ -57,26 +59,34 @@
         <div class="modal-content"> 
             <div class="modal-header"> 
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
-                <h4 class="modal-title">Quotes</h4> 
+                <h4 class="modal-title">Pembayaran</h4> 
             </div> 
             
-            <form action="{{ Route('quotes.save') }}" method="post" enctype="multipart/form-data" id="finput">
+            <form action="{{ Route('pembayaran.save') }}" method="post" enctype="multipart/form-data" id="finput">
                 {{ csrf_field() }}
                 <div class="modal-body">
                     <input type="hidden" id="id" name="id"> 
                     <div class="row"> 
                         <div class="col-md-12"> 
                             <div class="form-group"> 
-                                <label class="control-label">Quotes</label>
-                                <textarea class="form-control" id="quotes" name="quotes" placeholder="Quotes" rows="4" required></textarea>
+                                <label class="control-label">Nama Pembayaran</label>
+                                <input class="form-control" id="nama" name="nama" placeholder="Nama Pembayaran" required>
                             </div> 
                         </div> 
                     </div>
                     <div class="row"> 
                         <div class="col-md-12"> 
                             <div class="form-group"> 
-                                <label class="control-label">Creator</label>
-                                <input class="form-control" id="creator" name="creator" placeholder="Creator" required>
+                                <label class="control-label">Nomor Rekening</label>
+                                <input class="form-control" id="nomorrekening" name="nomorrekening" placeholder="Nomor Rekening" required>
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="row"> 
+                        <div class="col-md-12"> 
+                            <div class="form-group"> 
+                                <label class="control-label">Atas Nama</label>
+                                <input class="form-control" id="an" name="an" placeholder="Atas Nama" required>
                             </div> 
                         </div> 
                     </div>
@@ -103,7 +113,7 @@
 
         $.ajax(
         {
-            url:"{{ Route('quotes.data') }}",
+            url:"{{ Route('pembayaran.data') }}",
             type: "POST",
             data: {
                 id: id,
@@ -113,8 +123,9 @@
             success: function(data)
             {
                 $("#id").val(id);
-                $("#quotes").val(data.quotes);
-                $("#creator").val(data.creator);
+                $("#nama").val(data.nama_pembayaran);
+                $("#nomorrekening").val(data.nomor_rekening);
+                $("#an").val(data.atas_nama);
             }
         });
     }
@@ -128,7 +139,7 @@
 
         $.ajax(
         {
-            url: "{{ Route('quotes.delete') }}",
+            url: "{{ Route('pembayaran.delete') }}",
             type: 'POST',
             data: 
             {

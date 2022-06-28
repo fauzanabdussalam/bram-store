@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use File;
 
 use App\Models\Kategori;
-use App\Models\News;
+use App\Models\Pembayaran;
 use App\Models\Customer;
 use App\Models\User;
 
@@ -47,42 +47,43 @@ class AdminController extends Controller
         Session::flash('alert_swal','swal("Success!", "'.$message.'", "success");');
     }
 
-    // function quotes()
-    // {   
-    //     $data = Quotes::all();
+    function pembayaran()
+    {   
+        $data = Pembayaran::all();
 
-    //     return view('admin/pages/quotes', ['quotes' => $data]);
-    // }
+        return view('admin/pages/pembayaran', ['pembayaran' => $data]);
+    }
 
-    // function getDataQuotes(Request $request)
-    // {
-    //     $data = Quotes::find($request->id);
+    function getDataPembayaran(Request $request)
+    {
+        $data = Pembayaran::find($request->id);
 
-    //     return response()->json($data);
-    // }
+        return response()->json($data);
+    }
     
-    // function saveQuotes(Request $request)
-    // {
-    //     $id     = array('id' => $request->id);
-    //     $data   = array(
-    //         'quotes'    => $request->quotes,
-    //         'creator'   => $request->creator
-    //     );
+    function savePembayaran(Request $request)
+    {
+        $id     = array('id' => $request->id);
+        $data   = array(
+            'nama_pembayaran'   => $request->nama,
+            'nomor_rekening'    => $request->nomorrekening,
+            'atas_nama'         => $request->an,
+        );
 
-    //     Quotes::updateOrCreate($id, $data);        
+        Pembayaran::updateOrCreate($id, $data);        
         
-    //     $process = ($request->id == "")?"created":"updated";
-    //     $this->swal("quotes", $process);
+        $process = ($request->id == "")?"created":"updated";
+        $this->swal("pembayaran", $process);
 
-    //     return redirect('admin/quotes');
-    // }
+        return redirect('admin/pembayaran');
+    }
 
-    // function deleteQuotes(Request $request)
-    // {
-    //     $data = Quotes::find($request->id)->delete();
+    function deletePembayaran(Request $request)
+    {
+        $data = Pembayaran::find($request->id)->delete();
 
-    //     return response()->json($data);
-    // }
+        return response()->json($data);
+    }
 
     // function activity()
     // {
