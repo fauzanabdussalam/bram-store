@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use File;
 
-use App\Models\Quotes;
-use App\Models\Activity;
-use App\Models\Category;
+use App\Models\Kategori;
 use App\Models\News;
 use App\Models\Customer;
 use App\Models\User;
@@ -25,21 +23,21 @@ class AdminController extends Controller
 
     function index()
     {
-        $total_quotes   = Quotes::all()->count();
-        $total_activity = Activity::all()->count();
-        $total_category = Category::all()->count();
-        $total_news     = News::all()->count();
-        $total_customer = Customer::all()->count();
-        $total_user     = User::all()->count();
+        // $total_quotes   = Quotes::all()->count();
+        // $total_activity = Activity::all()->count();
+        // $total_category = Category::all()->count();
+        // $total_news     = News::all()->count();
+        // $total_customer = Customer::all()->count();
+        // $total_user     = User::all()->count();
 
-        $news = News::with("category", "user")->whereBetween('created_at', [date("Y-m-d")." 00:00:00", date("Y-m-d")." 23:59:59"])->get();
+        // $news = News::with("category", "user")->whereBetween('created_at', [date("Y-m-d")." 00:00:00", date("Y-m-d")." 23:59:59"])->get();
 
         return view('admin/pages/dashboard', [
-            "total_category"    => $total_category,
-            "total_news"        => $total_news,
-            "total_customer"    => $total_customer,
-            "total_user"        => $total_user,
-            "news"              => $news,
+            // "total_category"    => $total_category,
+            // "total_news"        => $total_news,
+            // "total_customer"    => $total_customer,
+            // "total_user"        => $total_user,
+            // "news"              => $news,
         ]);
     }
 
@@ -49,64 +47,130 @@ class AdminController extends Controller
         Session::flash('alert_swal','swal("Success!", "'.$message.'", "success");');
     }
 
-    function quotes()
-    {   
-        $data = Quotes::all();
+    // function quotes()
+    // {   
+    //     $data = Quotes::all();
 
-        return view('admin/pages/quotes', ['quotes' => $data]);
-    }
+    //     return view('admin/pages/quotes', ['quotes' => $data]);
+    // }
 
-    function getDataQuotes(Request $request)
-    {
-        $data = Quotes::find($request->id);
+    // function getDataQuotes(Request $request)
+    // {
+    //     $data = Quotes::find($request->id);
 
-        return response()->json($data);
-    }
+    //     return response()->json($data);
+    // }
     
-    function saveQuotes(Request $request)
-    {
-        $id     = array('id' => $request->id);
-        $data   = array(
-            'quotes'    => $request->quotes,
-            'creator'   => $request->creator
-        );
+    // function saveQuotes(Request $request)
+    // {
+    //     $id     = array('id' => $request->id);
+    //     $data   = array(
+    //         'quotes'    => $request->quotes,
+    //         'creator'   => $request->creator
+    //     );
 
-        Quotes::updateOrCreate($id, $data);        
+    //     Quotes::updateOrCreate($id, $data);        
         
-        $process = ($request->id == "")?"created":"updated";
-        $this->swal("quotes", $process);
+    //     $process = ($request->id == "")?"created":"updated";
+    //     $this->swal("quotes", $process);
 
-        return redirect('admin/quotes');
+    //     return redirect('admin/quotes');
+    // }
+
+    // function deleteQuotes(Request $request)
+    // {
+    //     $data = Quotes::find($request->id)->delete();
+
+    //     return response()->json($data);
+    // }
+
+    // function activity()
+    // {
+    //     return view('admin/pages/activity');
+    // }
+
+    // function getDataActivity(Request $request)
+    // {
+    //     $data = Activity::find($request->id);
+
+    //     return response()->json($data);
+    // }
+    
+    // function saveActivity(Request $request)
+    // {
+    //     $classActivity = new Activity();
+
+    //     $id = ($request->id != "")?$request->id:$classActivity->getNextId();
+
+    //     if ($request->hasFile('icon'))
+    //     {
+    //         $destinationPath    = "images/activity";
+    //         $file               = $request->icon;
+    //         $fileName           = $id.".".$file->getClientOriginalExtension();
+    //         $pathfile           = $destinationPath.'/'.$fileName;
+
+    //         if($request->old_icon != "")
+    //         {
+    //             File::delete($destinationPath."/".$request->old_icon);
+    //         }
+
+    //         $file->move($destinationPath, $fileName); 
+
+    //         $icon = $fileName;
+    //     }
+    //     else
+    //     {
+    //         $icon = $request->old_icon;
+    //     }
+
+    //     $id     = array('id' => $request->id);
+    //     $data   = array(
+    //         'activity_name' => $request->name,
+    //         'icon'          => $icon
+    //     );
+
+    //     Activity::updateOrCreate($id, $data);        
+        
+    //     $process = ($request->id == "")?"created":"updated";
+    //     $this->swal("activity", $process);
+
+    //     return redirect('admin/activity');
+    // }
+
+    // function deleteActivity(Request $request)
+    // {
+    //     $data = Activity::find($request->id);
+
+    //     File::delete("images/activity/".$data->icon);
+
+    //     $delete = $data->delete();
+
+    //     return response()->json($delete);
+    // }
+
+    function kategori()
+    {   
+        $data = Kategori::all();
+
+        return view('admin/pages/kategori', ['kategori' => $data]);
     }
 
-    function deleteQuotes(Request $request)
+    function getDataKategori(Request $request)
     {
-        $data = Quotes::find($request->id)->delete();
-
-        return response()->json($data);
-    }
-
-    function activity()
-    {
-        return view('admin/pages/activity');
-    }
-
-    function getDataActivity(Request $request)
-    {
-        $data = Activity::find($request->id);
+        $data = Kategori::find($request->id);
 
         return response()->json($data);
     }
     
-    function saveActivity(Request $request)
+    function saveKategori(Request $request)
     {
-        $classActivity = new Activity();
+        $classKategori = new Kategori();
 
-        $id = ($request->id != "")?$request->id:$classActivity->getNextId();
+        $id = ($request->id != "")?$request->id:$classKategori->getNextId();
 
         if ($request->hasFile('icon'))
         {
-            $destinationPath    = "images/activity";
+            $destinationPath    = "images/kategori";
             $file               = $request->icon;
             $fileName           = $id.".".$file->getClientOriginalExtension();
             $pathfile           = $destinationPath.'/'.$fileName;
@@ -125,195 +189,142 @@ class AdminController extends Controller
             $icon = $request->old_icon;
         }
 
-        $id     = array('id' => $request->id);
+        $id     = array('id'   => $request->id);
         $data   = array(
-            'activity_name' => $request->name,
+            'nama_kategori' => $request->name,
+            'jenis'         => $request->jenis,
             'icon'          => $icon
         );
 
-        Activity::updateOrCreate($id, $data);        
-        
-        $process = ($request->id == "")?"created":"updated";
-        $this->swal("activity", $process);
-
-        return redirect('admin/activity');
-    }
-
-    function deleteActivity(Request $request)
-    {
-        $data = Activity::find($request->id);
-
-        File::delete("images/activity/".$data->icon);
-
-        $delete = $data->delete();
-
-        return response()->json($delete);
-    }
-
-    function category()
-    {   
-        $data = Category::all();
-
-        return view('admin/pages/category', ['category' => $data]);
-    }
-
-    function getDataCategory(Request $request)
-    {
-        $data = Category::find($request->id);
-
-        return response()->json($data);
-    }
-    
-    function saveCategory(Request $request)
-    {
-        $classCategory = new Category();
-
-        $id = ($request->id != "")?$request->id:$classCategory->getNextId();
-
-        if ($request->hasFile('icon'))
-        {
-            $destinationPath    = "images/category";
-            $file               = $request->icon;
-            $fileName           = $id.".".$file->getClientOriginalExtension();
-            $pathfile           = $destinationPath.'/'.$fileName;
-
-            if($request->old_icon != "")
-            {
-                File::delete($destinationPath."/".$request->old_icon);
-            }
-
-            $file->move($destinationPath, $fileName); 
-
-            $icon = $fileName;
-        }
-        else
-        {
-            $icon = $request->old_icon;
-        }
-
-        $id     = array('id_category'   => $request->id);
-        $data   = array(
-            'category_name' => $request->name,
-            'icon'          => $icon
-        );
-
-        Category::updateOrCreate($id, $data);        
+        Kategori::updateOrCreate($id, $data);        
         
         $process = ($request->id == "")?"created":"updated";
         $this->swal("category", $process);
 
-        return redirect('admin/category');
+        return redirect('admin/kategori');
     }
 
-    function deleteCategory(Request $request)
+    function deleteKategori(Request $request)
     {
-        $data = Category::find($request->id);
+        $data = Kategori::find($request->id);
 
-        File::delete("images/category/".$data->icon);
+        File::delete("images/kategori/".$data->icon);
 
         $delete = $data->delete();
         
         return response()->json($delete);
     }
 
-    function news(Request $request)
-    {
-        $date_start = ($request->date_start!='')?$request->date_start:date('Y-m-d');
-        $date_end   = ($request->date_end!='')?$request->date_end:date('Y-m-d');
-        $filter     = ($request->filter!='')?$request->filter:0;
+    // function news(Request $request)
+    // {
+    //     $date_start = ($request->date_start!='')?$request->date_start:date('Y-m-d');
+    //     $date_end   = ($request->date_end!='')?$request->date_end:date('Y-m-d');
+    //     $filter     = ($request->filter!='')?$request->filter:0;
 
-        $news       = News::with("category", "user")->whereBetween('created_at', [$date_start." 00:00:00", $date_end." 23:59:59"]);
-        $news       = ($filter)?$news->where('id_category', $filter)->get():$news->get();
-        $category   = Category::orderBy('category_name')->get();
+    //     $news       = News::with("category", "user")->whereBetween('created_at', [$date_start." 00:00:00", $date_end." 23:59:59"]);
+    //     $news       = ($filter)?$news->where('id_category', $filter)->get():$news->get();
+    //     $category   = Category::orderBy('category_name')->get();
 
-        return view('admin/pages/news', [
-            'news'          => $news,
-            'category'      => $category,
-            'date_start'    => $date_start,
-            'date_end'      => $date_end,
-            'filter'        => $filter,
-        ]);
-    }
+    //     return view('admin/pages/news', [
+    //         'news'          => $news,
+    //         'category'      => $category,
+    //         'date_start'    => $date_start,
+    //         'date_end'      => $date_end,
+    //         'filter'        => $filter,
+    //     ]);
+    // }
 
-    function showDataNews($id="")
-    {
-        $data       = ($id!="")?News::with("category", "user")->find($id):null;
-        $category   = Category::orderBy('category_name')->get();
+    // function showDataNews($id="")
+    // {
+    //     $data       = ($id!="")?News::with("category", "user")->find($id):null;
+    //     $category   = Category::orderBy('category_name')->get();
 
-        return view('admin/pages/news_detail', [
-            'proses'    => ($id!="")?"Detail":"Add",
-            'data'      => $data,
-            'category'  => $category,
-        ]);
-    }
+    //     return view('admin/pages/news_detail', [
+    //         'proses'    => ($id!="")?"Detail":"Add",
+    //         'data'      => $data,
+    //         'category'  => $category,
+    //     ]);
+    // }
 
-    function saveNews(Request $request)
-    {
-        $classNews = new News();
+    // function saveNews(Request $request)
+    // {
+    //     $classNews = new News();
 
-        $id = ($request->id != "")?$request->id:$classNews->getNextId();
+    //     $id = ($request->id != "")?$request->id:$classNews->getNextId();
         
-        if ($request->hasFile('thumbnail'))
-        {
-            $destinationPath    = "images/news";
-            $file               = $request->thumbnail;
-            $fileName           = $id.".".$file->getClientOriginalExtension();
-            $pathfile           = $destinationPath.'/'.$fileName;
+    //     if ($request->hasFile('thumbnail'))
+    //     {
+    //         $destinationPath    = "images/news";
+    //         $file               = $request->thumbnail;
+    //         $fileName           = $id.".".$file->getClientOriginalExtension();
+    //         $pathfile           = $destinationPath.'/'.$fileName;
 
-            if($request->old_thumbnail != "")
-            {
-                File::delete($destinationPath."/".$request->old_thumbnail);
-            }
+    //         if($request->old_thumbnail != "")
+    //         {
+    //             File::delete($destinationPath."/".$request->old_thumbnail);
+    //         }
 
-            $file->move($destinationPath, $fileName); 
+    //         $file->move($destinationPath, $fileName); 
 
-            $thumbnail = $fileName;
-        }
-        else
-        {
-            $thumbnail = $request->old_thumbnail;
-        }
+    //         $thumbnail = $fileName;
+    //     }
+    //     else
+    //     {
+    //         $thumbnail = $request->old_thumbnail;
+    //     }
 
-        $id     = array('id_news' => $request->id);
-        $data   = array(
-            'thumbnail'     => $thumbnail,
-            'title'         => $request->title,
-            'id_category'   => $request->category,
-            'content'       => $request->content,
-            'id_user'       => Auth::user()->id,
-            'created_at'    => date('Y-m-d H:i:s'),
-        );
+    //     $id     = array('id_news' => $request->id);
+    //     $data   = array(
+    //         'thumbnail'     => $thumbnail,
+    //         'title'         => $request->title,
+    //         'id_category'   => $request->category,
+    //         'content'       => $request->content,
+    //         'id_user'       => Auth::user()->id,
+    //         'created_at'    => date('Y-m-d H:i:s'),
+    //     );
 
-        News::updateOrCreate($id, $data);        
+    //     News::updateOrCreate($id, $data);        
 
-        $process = ($request->id == "")?"created":"updated";
+    //     $process = ($request->id == "")?"created":"updated";
 
-        $this->swal("News", $process);
+    //     $this->swal("News", $process);
 
-        return redirect('admin/news');
-    }
+    //     return redirect('admin/news');
+    // }
 
-    function deleteNews(Request $request)
-    {
-        $data = News::find($request->id);
+    // function deleteNews(Request $request)
+    // {
+    //     $data = News::find($request->id);
 
-        File::delete("images/news/".$data->thumbnail);
+    //     File::delete("images/news/".$data->thumbnail);
 
-        $delete = $data->delete();
+    //     $delete = $data->delete();
 
-        return response()->json($delete);
-    }
+    //     return response()->json($delete);
+    // }
 
-    function setRecommendedNews(Request $request)
-    {
-        $update = News::find($request->id)->update(['is_recommended' => $request->recommended]);
+    // function setRecommendedNews(Request $request)
+    // {
+    //     $update = News::find($request->id)->update(['is_recommended' => $request->recommended]);
 
-        return response()->json($update);
-    }
+    //     return response()->json($update);
+    // }
 
     function customer()
     {
-        $data = Customer::all();
+        $classCustomer  = new Customer();
+        $customer       = Customer::all();
+
+        $data = [];
+        if(count($customer) > 0)
+        {
+            foreach($customer as $row)
+            {
+                $row->jumlah_transaksi = $classCustomer->getJumlahTransaksi($row->id);
+                
+                $data[] = $row;
+            }
+        }
       
         return view('admin/pages/customer', ['customer' => $data]);
     }

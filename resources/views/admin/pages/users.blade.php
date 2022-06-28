@@ -20,7 +20,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="m-b-30">
-                                <button class="btn btn-primary" onclick="add()">Add User <i class="fa fa-plus"></i></button>
+                                <button class="btn btn-primary" onclick="add()">Tambah <i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                     </div>
@@ -28,8 +28,8 @@
                         <thead>
                             <tr>
                                 <th>Username</th>
-                                <th>Name</th>
-                                <th>Action</th>
+                                <th>Nama</th>
+                                <th></th>
                             </tr>
                         </thead>                  
                         <tbody>
@@ -76,7 +76,7 @@
                     <div class="row"> 
                         <div class="col-md-12"> 
                             <div class="form-group"> 
-                                <label for="field-7" class="control-label">Name</label> 
+                                <label for="field-7" class="control-label">Nama</label> 
                                 <input type="text" class="form-control" id="name" name="name" required>
                             </div> 
                         </div> 
@@ -84,7 +84,7 @@
                     <div class="row"> 
                         <div class="col-md-12"> 
                             <div class="form-group"> 
-                                <label for="field-7" class="control-label">Password</label> 
+                                <label for="field-7" class="control-label">Kata Sandi</label> 
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div> 
                         </div> 
@@ -92,7 +92,7 @@
                     <div class="row"> 
                         <div class="col-md-12"> 
                             <div class="form-group"> 
-                                <label for="field-7" class="control-label">Confirm Password</label> 
+                                <label for="field-7" class="control-label">Ulangi Kata Sandi</label> 
                                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                             </div> 
                         </div> 
@@ -142,25 +142,25 @@
     {
         if($("#username").val() == "")
         {
-            alert("Please fill out Username field!");
+            alert("Harap isi username!");
             return false;
         }
         
         if($("#name").val() == "")
         {
-            alert("Please fill out Name field!");
+            alert("Harap isi nama!");
             return false;
         }
 
         if($("#id").val() == "" && $("#password").val() == "")
         {
-            alert("Please fill out Password field!");
+            alert("Harap isi kata sandi!");
             return false;
         }
         
         if($("#password").val() != $("#confirm_password").val())
         {
-            alert("Confirm Password didn't match!");
+            alert("Kata sandi tidak sama!");
             return false;
         }
 
@@ -187,7 +187,7 @@
                 {
                     swal({
                         title: "Success!",
-                        text: "Data created successfully!",
+                        text: "",
                         type: "success"
                     }, function() {
                         location.reload();
@@ -201,7 +201,7 @@
 
     function deleteData(id)
     {
-        if(!confirm("Are you sure want to delete this data?")) 
+        if(!confirm("Apakah anda yakin?")) 
         {
             return false;
         }
@@ -219,7 +219,7 @@
             {
                 swal({
                     title: "Success!",
-                    text: "Data deleted successfully!",
+                    text: "Data berhasil dihapus!",
                     type: "success"
                 }, function() {
                     location.reload();

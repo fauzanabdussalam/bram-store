@@ -75,7 +75,7 @@
                 <!-- LOGO -->
                 <div class="topbar-left">
                     <div class="text-center">
-                        <a href="{{url('admin')}}" class="logo"><span>Care Action</span></a>
+                        <a href="{{url('admin')}}" class="logo"><span>BRAM STORE</span></a>
                     </div>
                 </div>
                 <!-- Button mobile view to collapse sidebar menu -->
@@ -90,7 +90,7 @@
                                 <li class="dropdown">
                                     <a href="" class="dropdown-toggle profile" data-toggle="dropdown" aria-expanded="true"><img src="{{URL::asset('images/default.png')}}" alt="user-img" class="img-circle"> </a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="#" data-toggle="modal" data-target="#ubah-pw"><i class="fa fa-lock"></i> Change Password</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#ubah-pw"><i class="fa fa-lock"></i> Ubah Kata Sandi</a></li>
                                         <li><a href="{{ route('admin.logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                             <i class="fa fa-sign-out"></i> Logout
                                         </a>
@@ -133,17 +133,9 @@
                             <li>
                                 <a href="{{ Route('dashboard') }}" class="waves-effect  {{{ (Request::is('admin') ? 'active' : '') }}}"><i class="md md-dashboard"></i>Dashboard</a>
                             </li>
+
                             <li>
-                                <a href="{{ Route('quotes') }}" class="waves-effect  {{{ (Request::segment(2)=='quotes' ? 'active' : '') }}}"><i class="md md-format-quote"></i>Quotes</a>
-                            </li>
-                            <li>
-                                <a href="{{ Route('activity') }}" class="waves-effect  {{{ (Request::segment(2)=='activity' ? 'active' : '') }}}"><i class="md md-beenhere"></i>Activity</a>
-                            </li>
-                            <li>
-                                <a href="{{ Route('category') }}" class="waves-effect  {{{ (Request::segment(2)=='category' ? 'active' : '') }}}"><i class="md md-view-list"></i>Category</a>
-                            </li>
-                            <li>
-                                <a href="{{ Route('news') }}" class="waves-effect  {{{ (Request::segment(2)=='news' ? 'active' : '') }}}"><i class="fa fa-newspaper-o"></i>News</a>
+                                <a href="{{ Route('kategori') }}" class="waves-effect  {{{ (Request::segment(2)=='kategori' ? 'active' : '') }}}"><i class="md md-view-list"></i>Kategori Produk</a>
                             </li>
                             <li>
                                 <a href="{{ Route('customer') }}" class="waves-effect  {{{ (Request::segment(2)=='customer' ? 'active' : '') }}}"><i class="fa fa-user"></i>Customer</a>
@@ -165,7 +157,7 @@
                     <div class="modal-content"> 
                         <div class="modal-header"> 
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
-                            <h4 class="modal-title">Change Password</h4> 
+                            <h4 class="modal-title">Ubah Kata Sandi</h4> 
                         </div> 
                         
                         <form action="{{ Route('users.password') }}" method="post" enctype="multipart/form-data" id="modalform">
@@ -174,7 +166,7 @@
                                 <div class="row"> 
                                     <div class="col-md-12"> 
                                         <div class="form-group"> 
-                                            <label for="field-7" class="control-label">Old Password</label> 
+                                            <label for="field-7" class="control-label">Kata Sandi Lama</label> 
                                             <input type="password" class="form-control" id="old_password" name="old_password" value="" required>
                                         </div> 
                                     </div> 
@@ -182,7 +174,7 @@
                                 <div class="row"> 
                                     <div class="col-md-12"> 
                                         <div class="form-group"> 
-                                            <label for="field-7" class="control-label">New Password</label> 
+                                            <label for="field-7" class="control-label">Kata Sandi Baru</label> 
                                             <input type="password" class="form-control" id="new_password" name="new_password" value="" required>
                                         </div> 
                                     </div> 
@@ -190,7 +182,7 @@
                                 <div class="row"> 
                                     <div class="col-md-12"> 
                                         <div class="form-group"> 
-                                            <label for="field-7" class="control-label">Confirm New Password</label> 
+                                            <label for="field-7" class="control-label">Ulangi Kata Sandi Baru</label> 
                                             <input type="password" class="form-control" id="confirm_new_password" name="confirm_new_password" value="" required>
                                         </div> 
                                     </div> 
@@ -220,19 +212,19 @@
             {
                 if($("#old_password").val() == "")
                 {
-                    alert("Please fill out Old Password field");
+                    alert("Harap isi Kata Sandi Lama");
                     return false;
                 }
 
                 if($("#new_password").val() == "")
                 {
-                    alert("Please fill out New Password field");
+                    alert("Harap isi Kata Sandi Baru");
                     return false;
                 }
 
                 if($("#new_password").val() != $("#confirm_new_password").val())
                 {
-                    alert("Confirm Password didn't match!");
+                    alert("Kata Sandi Baru tidak sama!");
                     return false;
                 }
 
@@ -257,7 +249,7 @@
                         {
                             swal({
                                 title: "Success!",
-                                text: "Password changed successfully!",
+                                text: "Kata Sandi Berhasil diubah!",
                                 type: "success"
                             }, function() {
                                 location.reload();

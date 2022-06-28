@@ -43,4 +43,11 @@ class Customer extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function getJumlahTransaksi($id) 
+    {
+        $query = DB::table('transaksi')->where("id_customer", $id);
+
+        return 0;
+    }
 }

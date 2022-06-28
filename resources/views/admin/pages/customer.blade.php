@@ -20,12 +20,12 @@
                     <table class="table table-bordered table-striped" id="datatable">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Nama</th>
+                                <th>No. Telp</th>
                                 <th>Email</th>
-                                <th>Birthdate</th>
-                                <th>Gender</th>
-                                <th>Weight</th>
-                                <th>Height</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Tgl Lahir</th>
+                                <th>Jumlah Transaksi</th>
                                 <th></th>
                             </tr>
                         </thead>                  
@@ -33,11 +33,11 @@
                             @foreach($customer as $data)
                             <tr class="gradeX">
                                 <td>{{ $data->name }}</td>
+                                <td>{{ $data->phone }}</td>
                                 <td>{{ $data->email }}</td>
-                                <td>{{ ($data->birthdate!="")?date("d-m-Y", strtotime($data->birthdate)):"" }}</td>
                                 <td>{{ $data->gender }}</td>
-                                <td>{{ $data->weight }} kg</td>
-                                <td>{{ $data->height }} cm</td>
+                                <td>{{ ($data->birthdate!="")?date("d-m-Y", strtotime($data->birthdate)):"" }}</td>
+                                <td>{{ $data->jumlah_transaksi }}</td>
                                 <td>    
                                     <button class="btn btn-icon btn-sm btn-success" onclick="detail('{{ $data->id }}')"><i class="fa fa-eye"></i></button>
                                 </td>
@@ -71,12 +71,20 @@
                     
                     <div class="row"> 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Name</label>
+                            <label class="col-sm-3 control-label">Nama</label>
                             <div class="col-sm-9">
                               <p class="form-control-static" id="name"></p>
                             </div>
                         </div>  
                     </div> 
+                    <div class="row"> 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">No. Telp</label>
+                            <div class="col-sm-9">
+                              <p class="form-control-static" id="phone"></p>
+                            </div>
+                        </div>  
+                    </div>
                     <div class="row"> 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Email</label>
@@ -87,15 +95,7 @@
                     </div> 
                     <div class="row"> 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Birthdate</label>
-                            <div class="col-sm-9">
-                              <p class="form-control-static" id="birthdate"></p>
-                            </div>
-                        </div>  
-                    </div> 
-                    <div class="row"> 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Gender</label>
+                            <label class="col-sm-3 control-label">Jenis Kelamin</label>
                             <div class="col-sm-9">
                               <p class="form-control-static" id="gender"></p>
                             </div>
@@ -103,23 +103,23 @@
                     </div> 
                     <div class="row"> 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Weight</label>
+                            <label class="col-sm-3 control-label">Tgl Lahir</label>
                             <div class="col-sm-9">
-                              <p class="form-control-static" id="weight"></p>
-                            </div>
-                        </div>  
-                    </div> 
-                    <div class="row"> 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Height</label>
-                            <div class="col-sm-9">
-                              <p class="form-control-static" id="height"></p>
+                              <p class="form-control-static" id="birthdate"></p>
                             </div>
                         </div>  
                     </div>
                     <div class="row"> 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Registration Time</label>
+                            <label class="col-sm-3 control-label">Alamat</label>
+                            <div class="col-sm-9">
+                              <p class="form-control-static" id="address"></p>
+                            </div>
+                        </div>  
+                    </div>
+                    <div class="row"> 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Waktu Registrasi</label>
                             <div class="col-sm-9">
                               <p class="form-control-static" id="created_at"></p>
                             </div>
@@ -156,11 +156,11 @@
                 created_at  = date_td.getDate() + " " + months[date_td.getMonth()] + " " + date_td.getFullYear() + " " + date_td.getHours() + ":" + date_td.getMinutes();
 
                 $("#name").html(value.name);
+                $("#phone").html(value.phone);
                 $("#email").html(value.email);
                 $("#birthdate").html(birthdate);
                 $("#gender").html(value.gender);
-                $("#weight").html(value.weight + " kg");
-                $("#height").html(value.height + " cm");
+                $("#address").html(value.address);
                 $("#created_at").html(created_at);
                 $('#picture_src').attr("src", "{{ URL::asset('images/customer') }}" + "/" + value.picture);
             }

@@ -22,28 +22,12 @@ Route::group(['prefix' => 'admin'], function ()
 {    
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-    Route::group(['prefix' => 'quotes'], function () 
+    Route::group(['prefix' => 'kategori'], function () 
     {
-        Route::get('/', [AdminController::class, 'quotes'])->name('quotes');
-        Route::post('data', [AdminController::class, 'getDataQuotes'])->name('quotes.data');
-        Route::post('save', [AdminController::class, 'saveQuotes'])->name('quotes.save');
-        Route::post('delete', [AdminController::class, 'deleteQuotes'])->name('quotes.delete');
-    });
-    
-    Route::group(['prefix' => 'activity'], function () 
-    {
-        Route::get('/', [AdminController::class, 'activity'])->name('activity');
-        Route::post('data', [AdminController::class, 'getDataActivity'])->name('activity.data');
-        Route::post('save', [AdminController::class, 'saveActivity'])->name('activity.save');
-        Route::post('delete', [AdminController::class, 'deleteActivity'])->name('activity.delete');
-    });
-
-    Route::group(['prefix' => 'category'], function () 
-    {
-        Route::get('/', [AdminController::class, 'category'])->name('category');
-        Route::post('data', [AdminController::class, 'getDataCategory'])->name('category.data');
-        Route::post('save', [AdminController::class, 'saveCategory'])->name('category.save');
-        Route::post('delete', [AdminController::class, 'deleteCategory'])->name('category.delete');
+        Route::get('/', [AdminController::class, 'kategori'])->name('kategori');
+        Route::post('data', [AdminController::class, 'getDataKategori'])->name('kategori.data');
+        Route::post('save', [AdminController::class, 'saveKategori'])->name('kategori.save');
+        Route::post('delete', [AdminController::class, 'deleteKategori'])->name('kategori.delete');
     });
 
     Route::group(['prefix' => 'news'], function () 

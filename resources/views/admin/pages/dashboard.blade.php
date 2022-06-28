@@ -16,12 +16,12 @@
             </div>
 
             <!-- Start Widget -->
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-6 col-sm-6 col-lg-3">
                     <div class="mini-stat clearfix bx-shadow">
                         <span class="mini-stat-icon bg-info"><i class="md md-view-list"></i></span>
                         <div class="mini-stat-info text-right text-muted">
-                            <span class="counter">{{ $total_category }}</span>
+                            <span class="counter"> </span>
                             Total Category
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                     <div class="mini-stat clearfix bx-shadow">
                         <span class="mini-stat-icon bg-purple"><i class="fa fa-newspaper-o"></i></span>
                         <div class="mini-stat-info text-right text-muted">
-                            <span class="counter">{{ $total_news }}</span>
+                            <span class="counter"></span>
                             Total News
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="mini-stat clearfix bx-shadow">
                         <span class="mini-stat-icon bg-success"><i class="fa fa-user"></i></span>
                         <div class="mini-stat-info text-right text-muted">
-                            <span class="counter">{{ $total_customer }}</span>
+                            <span class="counter"></span>
                             Total Customer
                         </div>
                     </div>
@@ -50,12 +50,12 @@
                     <div class="mini-stat clearfix bx-shadow">
                         <span class="mini-stat-icon bg-primary"><i class="fa fa-users"></i></span>
                         <div class="mini-stat-info text-right text-muted">
-                            <span class="counter">{{ $total_user }}</span>
+                            <span class="counter"></span>
                             Total Users
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>  -->
             <!-- End row-->
 
             <div class="panel panel-default">    
@@ -73,19 +73,9 @@
                                 <th></th>
                             </tr>
                         </thead>                  
-                        <tbody>
-                            @foreach($news as $data)
-                            <tr class="gradeX">
-                                <td>{{ date("d-m-Y H:i", strtotime($data->created_at)) }}</td>
-                                <td>{{ $data->user->name }}</td>
-                                <td>{{ $data->title }}</td>
-                                <td>{{ $data->category->category_name }}</td>
-                                <td class="actions">
-                                    <a href="{{ url('admin/news/detail/'.$data->id_news) }}" class="btn btn-icon btn-sm btn-success"><i class="fa fa-eye"></i></a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
+                        <!-- <tbody>
+                          
+                        </tbody> -->
                     </table>
                     <hr>
                     <div style="float: right">

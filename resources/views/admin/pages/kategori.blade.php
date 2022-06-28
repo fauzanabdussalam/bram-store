@@ -7,10 +7,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="pull-left page-title"><i class="md md-view-list"></i> Category</h4>
+                    <h4 class="pull-left page-title"><i class="md md-view-list"></i> Kategori Produk</h4>
                     <ol class="breadcrumb pull-right">
                         <li><a href="{{ Route('dashboard') }}">Admin</a></li>
-                        <li class="active">Category</li>
+                        <li class="active">Kategori Produk</li>
                     </ol>
                 </div>
             </div>
@@ -20,24 +20,26 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="m-b-30">
-                                <button class="btn btn-primary" onclick="add()">Add Category <i class="fa fa-plus"></i></button>
+                                <button class="btn btn-primary" onclick="add()">Tambah <i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                     </div>
                     <table class="table table-bordered table-striped" id="datatable">
                         <thead>
                             <tr>
-                                <th>Category Name</th>
+                                <th>Nama Kategori</th>
+                                <th>Jenis Kategori</th>
                                 <th>Action</th>
                             </tr>
                         </thead>                  
                         <tbody>
-                            @foreach($category as $data)
+                            @foreach($kategori as $data)
                             <tr class="gradeX">
-                                <td>{{ $data->category_name }}</td>
+                                <td>{{ $data->nama_kategori }}</td>
+                                <td>{{ ($data->jenis)?"Jasa":"Barang" }}</td>
                                 <td class="actions">
-                                    <button class="btn btn-icon btn-sm btn-success" onclick="edit({{ $data->id_category }})"> <i class="fa fa-edit"></i> </button> 
-                                    <button class="btn btn-icon btn-sm btn-danger" onclick="deleteData({{ $data->id_category }})"> <i class="fa fa-trash"></i> </button>
+                                    <button class="btn btn-icon btn-sm btn-success" onclick="edit({{ $data->id }})"> <i class="fa fa-edit"></i> </button> 
+                                    <button class="btn btn-icon btn-sm btn-danger" onclick="deleteData({{ $data->id }})"> <i class="fa fa-trash"></i> </button>
                                 </td>
                             </tr>
                             @endforeach
@@ -55,18 +57,29 @@
         <div class="modal-content"> 
             <div class="modal-header"> 
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
-                <h4 class="modal-title">Category</h4> 
+                <h4 class="modal-title">Kategori Produk</h4> 
             </div> 
             
-            <form action="{{ Route('category.save') }}" method="post" enctype="multipart/form-data" id="finput">
+            <form action="{{ Route('kategori.save') }}" method="post" enctype="multipart/form-data" id="finput">
                 {{ csrf_field() }}
                 <div class="modal-body">
                     <input type="hidden" id="id" name="id"> 
                     <div class="row"> 
                         <div class="col-md-12"> 
                             <div class="form-group"> 
-                                <label class="control-label">Category Name</label> 
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Category Name" required> 
+                                <label class="control-label">Nama Kategori</label> 
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Nama Kategori" required> 
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="row"> 
+                        <div class="col-md-12"> 
+                            <div class="form-group"> 
+                                <label class="control-label">Jenis Kategori</label> 
+                                <select class="form-control" id="jenis" name="jenis" required>
+                                    <option value="0">Barang</option>
+                                    <option value="1">Jasa</option>
+                                </select>
                             </div> 
                         </div> 
                     </div>
@@ -112,7 +125,7 @@
 
         $.ajax(
         {
-            url:"{{ Route('category.data') }}",
+            url:"{{ Route('kategori.data') }}",
             type: "POST",
             data: {
                 id: id,
@@ -122,9 +135,10 @@
             success: function(data)
             {
                 $("#id").val(id);
-                $("#name").val(data.category_name);
+                $("#name").val(data.nama_kategori);
+                $("#jenis").val(data.jenis);
                 $("#old_icon").val(data.icon);
-                $("#icon_src").attr("src", "{{ URL::asset('images/category') }}" + "/" + data.icon);
+                $("#icon_src").attr("src", "{{ URL::asset('images/kategori') }}" + "/" + data.icon);
             }
         });
     }
@@ -151,7 +165,7 @@
 
         $.ajax(
         {
-            url: "{{ Route('category.delete') }}",
+            url: "{{ Route('kategori.delete') }}",
             type: 'POST',
             data: 
             {
