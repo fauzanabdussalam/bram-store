@@ -79,7 +79,7 @@
                     </table>
                     <hr>
                     <div style="float: right">
-                        <a href="{{ Route('news') }}" class="btn btn-icon btn-sm btn-primary">SEE ALL NEWS <i class="fa fa-arrow-right"></i></i></a>
+                        <!-- <a href="" class="btn btn-icon btn-sm btn-primary">SEE ALL NEWS <i class="fa fa-arrow-right"></i></i></a> -->
                     </div>
                 </div>
                 <!-- end: page -->

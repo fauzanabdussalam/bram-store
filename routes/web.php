@@ -21,6 +21,14 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function () 
 {    
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    
+    Route::group(['prefix' => 'pembayaran'], function () 
+    {
+        Route::get('/', [AdminController::class, 'pembayaran'])->name('pembayaran');
+        Route::post('data', [AdminController::class, 'getDataPembayaran'])->name('pembayaran.data');
+        Route::post('save', [AdminController::class, 'savePembayaran'])->name('pembayaran.save');
+        Route::post('delete', [AdminController::class, 'deletePembayaran'])->name('pembayaran.delete');
+    });
 
     Route::group(['prefix' => 'kategori'], function () 
     {
@@ -29,13 +37,13 @@ Route::group(['prefix' => 'admin'], function ()
         Route::post('save', [AdminController::class, 'saveKategori'])->name('kategori.save');
         Route::post('delete', [AdminController::class, 'deleteKategori'])->name('kategori.delete');
     });
-
-    Route::group(['prefix' => 'pembayaran'], function () 
+    
+    Route::group(['prefix' => 'produk'], function () 
     {
-        Route::get('/', [AdminController::class, 'pembayaran'])->name('pembayaran');
-        Route::post('data', [AdminController::class, 'getDataPembayaran'])->name('pembayaran.data');
-        Route::post('save', [AdminController::class, 'savePembayaran'])->name('pembayaran.save');
-        Route::post('delete', [AdminController::class, 'deletePembayaran'])->name('pembayaran.delete');
+        Route::get('/', [AdminController::class, 'produk'])->name('produk');
+        Route::post('data', [AdminController::class, 'getDataProduk'])->name('produk.data');
+        Route::post('save', [AdminController::class, 'saveProduk'])->name('produk.save');
+        Route::post('delete', [AdminController::class, 'deleteProduk'])->name('produk.delete');
     });
 
     Route::group(['prefix' => 'customer'], function () 

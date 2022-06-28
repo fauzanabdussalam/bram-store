@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use File;
 
-use App\Models\Kategori;
 use App\Models\Pembayaran;
+use App\Models\Kategori;
+use App\Models\Produk;
 use App\Models\Customer;
 use App\Models\User;
 
@@ -215,101 +216,85 @@ class AdminController extends Controller
         
         return response()->json($delete);
     }
+    
+    function produk(Request $request)
+    {   
+        $filter     = ($request->filter!='')?$request->filter:0;
+        $kategori   = Kategori::orderBy('nama_kategori')->get();
+        $produk     = Produk::with("kategori");
+        $produk     = ($filter)?$produk->where('id_kategori', $filter)->get():$produk->get();
 
-    // function news(Request $request)
-    // {
-    //     $date_start = ($request->date_start!='')?$request->date_start:date('Y-m-d');
-    //     $date_end   = ($request->date_end!='')?$request->date_end:date('Y-m-d');
-    //     $filter     = ($request->filter!='')?$request->filter:0;
+        return view('admin/pages/produk', [
+            'filter'    => $filter,
+            'kategori'  => $kategori,
+            'produk'    => $produk,
+        ]);
+    }
 
-    //     $news       = News::with("category", "user")->whereBetween('created_at', [$date_start." 00:00:00", $date_end." 23:59:59"]);
-    //     $news       = ($filter)?$news->where('id_category', $filter)->get():$news->get();
-    //     $category   = Category::orderBy('category_name')->get();
+    function getDataProduk(Request $request)
+    {
+        $data = Produk::find($request->id);
 
-    //     return view('admin/pages/news', [
-    //         'news'          => $news,
-    //         'category'      => $category,
-    //         'date_start'    => $date_start,
-    //         'date_end'      => $date_end,
-    //         'filter'        => $filter,
-    //     ]);
-    // }
+        return response()->json($data);
+    }
+    
+    function saveProduk(Request $request)
+    {
+        $classProduk = new Produk();
 
-    // function showDataNews($id="")
-    // {
-    //     $data       = ($id!="")?News::with("category", "user")->find($id):null;
-    //     $category   = Category::orderBy('category_name')->get();
-
-    //     return view('admin/pages/news_detail', [
-    //         'proses'    => ($id!="")?"Detail":"Add",
-    //         'data'      => $data,
-    //         'category'  => $category,
-    //     ]);
-    // }
-
-    // function saveNews(Request $request)
-    // {
-    //     $classNews = new News();
-
-    //     $id = ($request->id != "")?$request->id:$classNews->getNextId();
+        $id = ($request->id != "")?$request->id:$classProduk->getNextId();
         
-    //     if ($request->hasFile('thumbnail'))
-    //     {
-    //         $destinationPath    = "images/news";
-    //         $file               = $request->thumbnail;
-    //         $fileName           = $id.".".$file->getClientOriginalExtension();
-    //         $pathfile           = $destinationPath.'/'.$fileName;
+        if ($request->hasFile('icon'))
+        {
+            $destinationPath    = "images/produk";
+            $file               = $request->icon;
+            $fileName           = $id.".".$file->getClientOriginalExtension();
+            $pathfile           = $destinationPath.'/'.$fileName;
 
-    //         if($request->old_thumbnail != "")
-    //         {
-    //             File::delete($destinationPath."/".$request->old_thumbnail);
-    //         }
+            if($request->old_icon != "")
+            {
+                File::delete($destinationPath."/".$request->old_icon);
+            }
 
-    //         $file->move($destinationPath, $fileName); 
+            $file->move($destinationPath, $fileName); 
 
-    //         $thumbnail = $fileName;
-    //     }
-    //     else
-    //     {
-    //         $thumbnail = $request->old_thumbnail;
-    //     }
+            $gambar = $fileName;
+        }
+        else
+        {
+            $gambar = $request->old_icon;
+        }
 
-    //     $id     = array('id_news' => $request->id);
-    //     $data   = array(
-    //         'thumbnail'     => $thumbnail,
-    //         'title'         => $request->title,
-    //         'id_category'   => $request->category,
-    //         'content'       => $request->content,
-    //         'id_user'       => Auth::user()->id,
-    //         'created_at'    => date('Y-m-d H:i:s'),
-    //     );
+        $data_kategori = Kategori::find($request->kategori);
 
-    //     News::updateOrCreate($id, $data);        
+        $id     = array('id' => $request->id);
+        $data   = array(
+            'id_kategori'   => $request->kategori,
+            'nama_produk'   => $request->nama,
+            'kondisi'       => ($data_kategori->jenis)?0:$request->kondisi,
+            'jenis'         => ($data_kategori->jenis)?0:$request->jenis,
+            'berat'         => ($data_kategori->jenis)?0:$request->berat,
+            'harga'         => $request->harga,
+            'deskripsi'     => $request->deskripsi,
+            'gambar'        => $gambar,
+            'stok'          => ($data_kategori->jenis)?$request->aktif:$request->stok,
+        );
 
-    //     $process = ($request->id == "")?"created":"updated";
+        Produk::updateOrCreate($id, $data);        
 
-    //     $this->swal("News", $process);
+        $process = ($request->id == "")?"created":"updated";
 
-    //     return redirect('admin/news');
-    // }
+        $this->swal("produk", $process);
 
-    // function deleteNews(Request $request)
-    // {
-    //     $data = News::find($request->id);
+        return redirect('admin/produk');
+    }
 
-    //     File::delete("images/news/".$data->thumbnail);
+    function deleteProduk(Request $request)
+    {
+        $data = Produk::find($request->id)->delete();
 
-    //     $delete = $data->delete();
-
-    //     return response()->json($delete);
-    // }
-
-    // function setRecommendedNews(Request $request)
-    // {
-    //     $update = News::find($request->id)->update(['is_recommended' => $request->recommended]);
-
-    //     return response()->json($update);
-    // }
+        return response()->json($data);
+    }
 
     function customer()
     {

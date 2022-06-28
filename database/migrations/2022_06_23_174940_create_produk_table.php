@@ -21,7 +21,7 @@ class CreateProdukTable extends Migration
             $table->string('kondisi', 10)->default(0);
             $table->string('jenis', 10)->default(0);
             $table->integer('berat')->default(0);
-            $table->double('harga_barang')->default(0);
+            $table->double('harga')->default(0);
             $table->text('deskripsi')->nullable();
             $table->text('gambar')->nullable();
             $table->integer('stok')->default(0);

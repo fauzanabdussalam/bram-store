@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-// use App\Models\News;
+use App\Models\Produk;
 
 class Kategori extends Model
 {
@@ -16,7 +16,7 @@ class Kategori extends Model
 
     public function produk()
     {
-        // return $this->hasMany(News::class);
+        return $this->hasMany(Produk::class);
     }
 
     public function getNextId() 
