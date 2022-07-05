@@ -7,10 +7,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="pull-left page-title"><i class="fa fa-users"></i> Users</h4>
+                    <h4 class="pull-left page-title"><i class="fa fa-users"></i> Pengguna</h4>
                     <ol class="breadcrumb pull-right">
                         <li><a href="{{ Route('dashboard') }}">Admin</a></li>
-                        <li class="active">Users</li>
+                        <li class="active">Pengguna</li>
                     </ol>
                 </div>
             </div>

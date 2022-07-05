@@ -120,10 +120,10 @@ $( document ).ready(function() {
                         width: $('#sparkline1').width(),
                         height: '165',
                         chartRangeMax: 50,
-                        lineColor: '#33b86c',
-                        fillColor: 'rgba(51, 184, 108, 0.1)',
-                        highlightLineColor: 'rgba(51, 184, 108, 0.1)',
-                        highlightSpotColor: 'rgba(51, 184, 108, 0.2)',
+                        lineColor: '#1e88e5',
+                        fillColor: 'rgba(30, 136, 229, 0.3)',
+                        highlightLineColor: 'rgba(24,147,126,.1)',
+                        highlightSpotColor: 'rgba(24,147,126,.2)',
                     });
                 }
                 lastmousetime = timenow;

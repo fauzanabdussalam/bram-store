@@ -11,6 +11,7 @@ use File;
 use App\Models\Pembayaran;
 use App\Models\Kategori;
 use App\Models\Produk;
+use App\Models\Ulasan;
 use App\Models\Customer;
 use App\Models\User;
 
@@ -24,20 +25,18 @@ class AdminController extends Controller
 
     function index()
     {
-        // $total_quotes   = Quotes::all()->count();
-        // $total_activity = Activity::all()->count();
-        // $total_category = Category::all()->count();
-        // $total_news     = News::all()->count();
-        // $total_customer = Customer::all()->count();
-        // $total_user     = User::all()->count();
+        $total_kategori     = Kategori::all()->count();
+        $total_produk     = Produk::all()->count();
+        $total_customer     = Customer::all()->count();
+        $total_user         = User::all()->count();
 
         // $news = News::with("category", "user")->whereBetween('created_at', [date("Y-m-d")." 00:00:00", date("Y-m-d")." 23:59:59"])->get();
 
         return view('admin/pages/dashboard', [
-            // "total_category"    => $total_category,
-            // "total_news"        => $total_news,
-            // "total_customer"    => $total_customer,
-            // "total_user"        => $total_user,
+            "total_kategori"    => $total_kategori,
+            "total_produk"        => $total_produk,
+            "total_pelanggan"   => $total_customer,
+            "total_pengguna"    => $total_user,
             // "news"              => $news,
         ]);
     }
@@ -85,70 +84,6 @@ class AdminController extends Controller
 
         return response()->json($data);
     }
-
-    // function activity()
-    // {
-    //     return view('admin/pages/activity');
-    // }
-
-    // function getDataActivity(Request $request)
-    // {
-    //     $data = Activity::find($request->id);
-
-    //     return response()->json($data);
-    // }
-    
-    // function saveActivity(Request $request)
-    // {
-    //     $classActivity = new Activity();
-
-    //     $id = ($request->id != "")?$request->id:$classActivity->getNextId();
-
-    //     if ($request->hasFile('icon'))
-    //     {
-    //         $destinationPath    = "images/activity";
-    //         $file               = $request->icon;
-    //         $fileName           = $id.".".$file->getClientOriginalExtension();
-    //         $pathfile           = $destinationPath.'/'.$fileName;
-
-    //         if($request->old_icon != "")
-    //         {
-    //             File::delete($destinationPath."/".$request->old_icon);
-    //         }
-
-    //         $file->move($destinationPath, $fileName); 
-
-    //         $icon = $fileName;
-    //     }
-    //     else
-    //     {
-    //         $icon = $request->old_icon;
-    //     }
-
-    //     $id     = array('id' => $request->id);
-    //     $data   = array(
-    //         'activity_name' => $request->name,
-    //         'icon'          => $icon
-    //     );
-
-    //     Activity::updateOrCreate($id, $data);        
-        
-    //     $process = ($request->id == "")?"created":"updated";
-    //     $this->swal("activity", $process);
-
-    //     return redirect('admin/activity');
-    // }
-
-    // function deleteActivity(Request $request)
-    // {
-    //     $data = Activity::find($request->id);
-
-    //     File::delete("images/activity/".$data->icon);
-
-    //     $delete = $data->delete();
-
-    //     return response()->json($delete);
-    // }
 
     function kategori()
     {   
@@ -292,6 +227,51 @@ class AdminController extends Controller
     function deleteProduk(Request $request)
     {
         $data = Produk::find($request->id)->delete();
+
+        return response()->json($data);
+    }
+
+    // function news(Request $request)
+    // {
+    //     $date_start = ($request->date_start!='')?$request->date_start:date('Y-m-d');
+    //     $date_end   = ($request->date_end!='')?$request->date_end:date('Y-m-d');
+    //     $filter     = ($request->filter!='')?$request->filter:0;
+
+    //     $news       = News::with("category", "user")->whereBetween('created_at', [$date_start." 00:00:00", $date_end." 23:59:59"]);
+    //     $news       = ($filter)?$news->where('id_category', $filter)->get():$news->get();
+    //     $category   = Category::orderBy('category_name')->get();
+
+    //     return view('admin/pages/news', [
+    //         'news'          => $news,
+    //         'category'      => $category,
+    //         'date_start'    => $date_start,
+    //         'date_end'      => $date_end,
+    //         'filter'        => $filter,
+    //     ]);
+    // }
+
+    // function showDataNews($id="")
+    // {
+    //     $data       = ($id!="")?News::with("category", "user")->find($id):null;
+    //     $category   = Category::orderBy('category_name')->get();
+
+    //     return view('admin/pages/news_detail', [
+    //         'proses'    => ($id!="")?"Detail":"Add",
+    //         'data'      => $data,
+    //         'category'  => $category,
+    //     ]);
+    // }
+
+    function ulasan()
+    {
+        $data = Ulasan::with('customer', 'produk')->get();
+      
+        return view('admin/pages/ulasan', ['ulasan' => $data]);
+    }
+
+    function getDataUlasan(Request $request)
+    {
+        $data = Ulasan::find($request->id);
 
         return response()->json($data);
     }

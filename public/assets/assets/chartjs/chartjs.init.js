@@ -56,10 +56,10 @@
             labels : ["January","February","March","April","May","June","July"],
             datasets : [
                 {
-                    fillColor : "rgba(51, 184, 108, 0.75)",
-                    strokeColor : "rgba(51, 184, 108, 0.75)",
+                    fillColor : "rgba(49, 126, 235, 0.75)",
+                    strokeColor : "rgba(49, 126, 235, 0.75)",
                     pointColor : "#fff",
-                    pointStrokeColor : "rgba(51, 184, 108, 0.75)",
+                    pointStrokeColor : "rgba(49, 126, 235, 0.75)",
                     data : [33,52,63,92,50,53,46]
                 },
                 
@@ -107,7 +107,7 @@
             },
             {
                 value : 80,
-                color : "#33b86c"
+                color : "#027D8F"
             },
             {
                 value : 70,
@@ -122,8 +122,8 @@
             labels : ["January","February","March","April","May","June","July"],
                     datasets : [
                         {
-                            fillColor : "#33b86c",
-                            strokeColor : "#33b86c",
+                            fillColor : "#027D8F",
+                            strokeColor : "#027D8F",
                             data : [65,59,90,81,56,55,40]
                         },
                         {
@@ -140,9 +140,9 @@
             labels : ["Eating","Drinking","Sleeping","Designing","Coding","Partying","Running"],
             datasets : [
                 {
-                    fillColor : "rgba(51, 184, 108, 0.5)",
-                    strokeColor : "rgba(51, 184, 108, 0.75)",
-                    pointColor : "rgba(51, 184, 108, 0.1)",
+                    fillColor : "rgba(49, 126, 235, 0.5)",
+                    strokeColor : "rgba(49, 126, 235, 0.75)",
+                    pointColor : "rgba(49, 126, 235, 1)",
                     pointStrokeColor : "#fff",
                     data : [65,59,90,81,56,55,40]
                 },
@@ -177,7 +177,7 @@
             },
             {
                 value : 82,
-                color: "#33b86c"
+                color: "#027D8F"
             },
             {
                 value : 8,

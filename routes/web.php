@@ -46,6 +46,20 @@ Route::group(['prefix' => 'admin'], function ()
         Route::post('delete', [AdminController::class, 'deleteProduk'])->name('produk.delete');
     });
 
+    Route::group(['prefix' => 'transaksi'], function () 
+    {
+        Route::get('/', [AdminController::class, 'transaksi'])->name('transaksi');
+        Route::post('data', [AdminController::class, 'getDataTransaksi'])->name('transaksi.data');
+        Route::post('save', [AdminController::class, 'saveTransaksi'])->name('transaksi.save');
+        Route::post('delete', [AdminController::class, 'deleteTransaksi'])->name('transaksi.delete');
+    });
+
+    Route::group(['prefix' => 'ulasan'], function () 
+    {
+        Route::get('/', [AdminController::class, 'ulasan'])->name('ulasan');
+        Route::post('data', [AdminController::class, 'getDataUlasan'])->name('ulasan.data');
+    });
+
     Route::group(['prefix' => 'customer'], function () 
     {
         Route::get('/', [AdminController::class, 'customer'])->name('customer');

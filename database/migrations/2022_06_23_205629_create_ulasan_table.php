@@ -14,16 +14,12 @@ class CreateUlasanTable extends Migration
     public function up()
     {
         Schema::create('ulasan', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('id_customer');
-            $table->foreign('id_customer')->references('id')->on('customer')->cascadeOnDelete();
-            $table->unsignedBigInteger('id_produk');
-            $table->foreign('id_produk')->references('id')->on('produk')->cascadeOnDelete();
             $table->string('nomor_transaksi', 20);
-            $table->foreign('nomor_transaksi')->references('nomor_transaksi')->on('transaksi')->cascadeOnDelete();
+            $table->primary('nomor_transaksi');
             $table->unsignedTinyInteger('nilai');
             $table->text('ulasan')->nullable();
             $table->text('gambar')->nullable();
+            $table->timestamp('created_at');
         });
     }
 

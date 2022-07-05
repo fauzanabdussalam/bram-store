@@ -11,7 +11,7 @@ $(function(){
 
     //modify buttons style
     $.fn.editableform.buttons = 
-    '<button type="submit" class="btn btn-success editable-submit btn-sm"><i class="md md-done"></i></button>' +
+    '<button type="submit" class="btn btn-primary editable-submit btn-sm"><i class="md md-done"></i></button>' +
     '<button type="button" class="btn editable-cancel btn-sm"><i class="md md-clear"></i></button>';         
     
     //editables 

@@ -16,22 +16,22 @@
             </div>
 
             <!-- Start Widget -->
-            <!-- <div class="row">
+            <div class="row">
                 <div class="col-md-6 col-sm-6 col-lg-3">
                     <div class="mini-stat clearfix bx-shadow">
                         <span class="mini-stat-icon bg-info"><i class="md md-view-list"></i></span>
                         <div class="mini-stat-info text-right text-muted">
-                            <span class="counter"> </span>
-                            Total Category
+                            <span class="counter">{{ $total_kategori }}</span>
+                            Total Kategori
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-sm-6 col-lg-3">
                     <div class="mini-stat clearfix bx-shadow">
-                        <span class="mini-stat-icon bg-purple"><i class="fa fa-newspaper-o"></i></span>
+                        <span class="mini-stat-icon bg-purple"><i class="md md-dns"></i></span>
                         <div class="mini-stat-info text-right text-muted">
-                            <span class="counter"></span>
-                            Total News
+                            <span class="counter">{{ $total_produk }}</span>
+                            Total Produk
                         </div>
                     </div>
                 </div>
@@ -40,8 +40,8 @@
                     <div class="mini-stat clearfix bx-shadow">
                         <span class="mini-stat-icon bg-success"><i class="fa fa-user"></i></span>
                         <div class="mini-stat-info text-right text-muted">
-                            <span class="counter"></span>
-                            Total Customer
+                            <span class="counter">{{ $total_pelanggan }}</span>
+                            Total Pelanggan
                         </div>
                     </div>
                 </div>
@@ -50,12 +50,12 @@
                     <div class="mini-stat clearfix bx-shadow">
                         <span class="mini-stat-icon bg-primary"><i class="fa fa-users"></i></span>
                         <div class="mini-stat-info text-right text-muted">
-                            <span class="counter"></span>
-                            Total Users
+                            <span class="counter">{{ $total_pengguna }}</span>
+                            Total Pengguna
                         </div>
                     </div>
                 </div>
-            </div>  -->
+            </div> 
             <!-- End row-->
 
             <div class="panel panel-default">    

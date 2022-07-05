@@ -6,7 +6,7 @@
         <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
         <meta name="author" content="Coderthemes">
 
-        <link rel="shortcut icon" href="{{URL::asset('images')}}/care_action.png">
+        <link rel="shortcut icon" href="{{URL::asset('images')}}/logo.png">
 
         <title>Admin</title>
 
@@ -143,10 +143,16 @@
                                 <a href="{{ Route('produk') }}" class="waves-effect  {{{ (Request::segment(2)=='produk' ? 'active' : '') }}}"><i class="md md-dns"></i>Produk</a>
                             </li>
                             <li>
-                                <a href="{{ Route('customer') }}" class="waves-effect  {{{ (Request::segment(2)=='customer' ? 'active' : '') }}}"><i class="fa fa-user"></i>Customer</a>
+                                <a href="{{ Route('transaksi') }}" class="waves-effect  {{{ (Request::segment(2)=='transaksi' ? 'active' : '') }}}"><i class="md md-shopping-cart"></i>Transaksi</a>
                             </li>
                             <li>
-                                <a href="{{ Route('users') }}" class="waves-effect  {{{ (Request::segment(2)=='users' ? 'active' : '') }}}"><i class="fa fa-users"></i> Users</a>
+                                <a href="{{ Route('ulasan') }}" class="waves-effect  {{{ (Request::segment(2)=='ulasan' ? 'active' : '') }}}"><i class="md md-star"></i>Ulasan</a>
+                            </li>
+                            <li>
+                                <a href="{{ Route('customer') }}" class="waves-effect  {{{ (Request::segment(2)=='customer' ? 'active' : '') }}}"><i class="fa fa-user"></i>Pelanggan</a>
+                            </li>
+                            <li>
+                                <a href="{{ Route('users') }}" class="waves-effect  {{{ (Request::segment(2)=='users' ? 'active' : '') }}}"><i class="fa fa-users"></i>Pengguna</a>
                             </li>
                         </ul>
                         <div class="clearfix"></div>
@@ -205,7 +211,7 @@
             @yield('content')
 
                 <footer class="footer primary text-center">
-                    <marquee><b>Copyright © 2021</b></marquee>
+                    <b>Copyright © 2022</b>
                 </footer>
 
             </div>

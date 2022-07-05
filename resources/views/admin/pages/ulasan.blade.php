@@ -7,10 +7,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="pull-left page-title"><i class="fa fa-user"></i> Pelanggan</h4>
+                    <h4 class="pull-left page-title"><i class="md md-star"></i> Ulasan</h4>
                     <ol class="breadcrumb pull-right">
                         <li><a href="{{ Route('dashboard') }}">Admin</a></li>
-                        <li class="active">Pelanggan</li>
+                        <li class="active">Ulasan</li>
                     </ol>
                 </div>
             </div>
@@ -20,18 +20,20 @@
                     <table class="table table-bordered table-striped" id="datatable">
                         <thead>
                             <tr>
-                                <th>Nama</th>
-                                <th>No. Telp</th>
-                                <th>Email</th>
-                                <th>Jenis Kelamin</th>
-                                <th>Tgl Lahir</th>
-                                <th>Jumlah Transaksi</th>
+                                <th>Waktu</th>
+                                <th>No. Transaksi</th>
+                                <th>Produk</th>
+                                <th>Nama Customer</th>
+                                <th>Telp Customer</th>
+                                <th>Rating</th>
+                                <th>Ulasan</th>
                                 <th></th>
                             </tr>
                         </thead>                  
                         <tbody>
-                            @foreach($customer as $data)
+                            @foreach($ulasan as $data)
                             <tr class="gradeX">
+                                <td>{{ $data->created_at }}</td>
                                 <td>{{ $data->name }}</td>
                                 <td>{{ $data->phone }}</td>
                                 <td>{{ $data->email }}</td>
@@ -57,7 +59,7 @@
         <div class="modal-content"> 
             <div class="modal-header"> 
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
-                <h4 class="modal-title">Customer</h4> 
+                <h4 class="modal-title">Ulasan</h4> 
             </div> 
             <div class="modal-body">
                 <form class="form-horizontal" role="form">  
@@ -138,7 +140,7 @@
     
         $.ajax(
         {
-            url:"{{ Route('customer.data') }}",
+            url:"{{ Route('ulasan.data') }}",
             type: "POST",
             data: {
                 id: id,
@@ -162,7 +164,7 @@
                 $("#gender").html(value.gender);
                 $("#address").html(value.address);
                 $("#created_at").html(created_at);
-                $('#picture_src').attr("src", "{{ URL::asset('images/customer') }}" + "/" + value.picture);
+                $('#picture_src').attr("src", "{{ URL::asset('images/ulasan') }}" + "/" + value.picture);
             }
         });
     }

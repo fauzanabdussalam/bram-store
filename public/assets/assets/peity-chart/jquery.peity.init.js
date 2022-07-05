@@ -49,25 +49,25 @@
     //init
     PeityChart.prototype.init = function() {
         // creating some example chart
-        this.createPie("span.pie", ['#33b86c', '#d7d7d7', '#ffffff']);
+        this.createPie("span.pie", ['#027D8F', '#d7d7d7', '#ffffff']);
 
         //line
-        this.createLine(".line", '#33b86c', '#169c81');        
+        this.createLine(".line", '#027D8F', '#169c81');        
 
         //bar
-        this.createBar('.bar', ["#33b86c", "#d7d7d7"]);
+        this.createBar('.bar', ["#027D8F", "#d7d7d7"]);
 
         //bar
-        this.createBar('.bar_dashboard', ["#33b86c", "#d7d7d7"], 100);
+        this.createBar('.bar_dashboard', ["#027D8F", "#d7d7d7"], 100);
 
         //donut
-        this.createDonut('.donut', ["#33b86c", "#d7d7d7"]);
+        this.createDonut('.donut', ["#027D8F", "#d7d7d7"]);
 
         //this would use data attributes specified in html
         this.createDonut('.data-attributes span');
 
         //live graph
-        var updatingChart = this.createLine(".updating-chart",'#33b86c','#169c81', 64);
+        var updatingChart = this.createLine(".updating-chart",'#027D8F','#169c81', 64);
 
         setInterval(function() {
             var random = Math.round(Math.random() * 10)
