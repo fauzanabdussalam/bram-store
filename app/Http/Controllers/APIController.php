@@ -8,11 +8,9 @@ use Illuminate\Support\Facades\URL;
 use Auth;
 use Validator;
 use File;
-use App\Models\Quotes;
-use App\Models\Activity;
 use App\Models\Customer;
-use App\Models\Category;
-use App\Models\News;
+use App\Models\Kategori;
+use App\Models\Produk;
 
 class APIController extends Controller
 {
@@ -73,24 +71,6 @@ class APIController extends Controller
 
         $ret['status']  = "success";
         
-        return response()->json($ret);
-    }
-
-    function getDataCategory()
-    {
-        $category = Category::orderBy('category_name')->get();
-
-        $data = [];
-        foreach($category as $row)
-        {
-            $row->icon = URL::asset('images/category').'/'.$row->icon;
-            
-            $data[] = $row;
-        }
-
-        $ret['status']  = "success";
-        $ret['data']    = $data;
-
         return response()->json($ret);
     }
 
@@ -260,6 +240,56 @@ class APIController extends Controller
             $ret['status']  = "success";
             $ret['message'] = "Password changed successfully!";
         }
+
+        return response()->json($ret);
+    }
+
+    function getKategori()
+    {
+        $kategori = Kategori::orderBy('jenis')->orderBy('nama_kategori')->get();
+
+        $data = [];
+        foreach($kategori as $row)
+        {
+            $row->icon  = URL::asset('images/kategori').'/'.$row->icon;
+            $data[]     = $row;
+        }
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function getProduk(Request $request)
+    {
+        $produk = Produk::with("kategori")->select('produk.*', 'nama_kategori', 'kategori.jenis AS jenis_produk')->leftJoin('kategori', 'produk.id_kategori', '=', 'kategori.id')->where('stok', '>', 0);
+        $produk = ($request->exists('id_kategori') && $request->id_kategori!="")?$produk->where('produk.id_kategori', $request->id_kategori):$produk;
+        $produk = ($request->exists('keyword') && $request->keyword)?$produk->where('nama_produk', 'LIKE', '%'.$request->keyword.'%')->orWhere('nama_kategori', 'LIKE', '%'.$request->keyword.'%'):$produk;
+        $produk = $produk->orderBy('nama_produk', 'desc')->get();
+
+        $data = [];
+        foreach($produk as $row)
+        { 
+            $data[] = [
+                "id"                => $row->id,
+                "nama_produk"       => $row->nama_produk,
+                "jenis_produk"      => (!$row->jenis_produk)?"Barang":"Jasa",
+                "kategori"          => $row->nama_kategori,
+                "kondisi"           => (!$row->kondisi)?"Baru":"Bekas",
+                "jenis_pembelian"   => (!$row->jenis)?"Langsung":"Pre-Order",
+                "berat"             => $row->berat . " gr",
+                "warna"             => $row->warna,
+                "ukuran"            => empty($row->ukuran)?[]:explode(",", $row->ukuran),
+                "harga"             => (int)$row->harga,
+                "deskripsi"         => $row->deskripsi,
+                "gambar"            => URL::asset('images/produk').'/'.$row->gambar,
+                "stok"              => $row->stok
+            ];
+        }
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
 
         return response()->json($ret);
     }

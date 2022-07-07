@@ -137,6 +137,27 @@
                                 <input class="form-control" type="number" id="berat" name="berat" value="0" min="0">
                             </div> 
                         </div> 
+                        <div class="row"> 
+                            <div class="col-md-6"> 
+                                <div class="form-group"> 
+                                    <label class="control-label">Warna</label>
+                                    <input class="form-control" id="warna" name="warna" placeholder="Warna">
+                                </div> 
+                            </div> 
+                            <div class="col-md-6"> 
+                                <div class="form-group"> 
+                                    <label class="control-label">Ukuran (Pakaian)</label><br>
+                                    <select class="select2" name="ukuran[]" id="ukuran" multiple data-placeholder="Pilih Ukuran...">
+                                        <option value="XS">XS</option>
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+                                        <option value="XXL">XXL</option>
+                                    </select>
+                                </div> 
+                            </div> 
+                        </div>
                     </div>
                     <div class="row"> 
                         <div class="col-md-12"> 
@@ -208,6 +229,8 @@
         $("#icon").prop('required',true);
         $("#icon_src").attr("src", "");
         showInputBarang();
+
+        $('.select2').select2();
     }
 
     function edit(id)

@@ -19,6 +19,8 @@ class Produk extends Model
         'kondisi', 
         'jenis', 
         'berat',
+        'warna',
+        'ukuran',
         'harga',
         'deskripsi',
         'gambar',

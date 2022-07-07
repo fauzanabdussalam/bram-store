@@ -181,7 +181,8 @@ class AdminController extends Controller
     
     function saveProduk(Request $request)
     {
-        $id = ($request->id != "")?$request->id:$this->classProduk->getNextId();
+        $id     = ($request->id != "")?$request->id:$this->classProduk->getNextId();
+        $ukuran = ($request->ukuran != "")?implode(",", $request->ukuran):"";
         
         if ($request->hasFile('icon'))
         {
@@ -213,6 +214,8 @@ class AdminController extends Controller
             'kondisi'       => ($data_kategori->jenis)?0:$request->kondisi,
             'jenis'         => ($data_kategori->jenis)?0:$request->jenis,
             'berat'         => ($data_kategori->jenis)?0:$request->berat,
+            'warna'         => ($data_kategori->jenis)?"":$request->warna,
+            'ukuran'        => ($data_kategori->jenis)?0:$ukuran,
             'harga'         => $request->harga,
             'deskripsi'     => $request->deskripsi,
             'gambar'        => $gambar,

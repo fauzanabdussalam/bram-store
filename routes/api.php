@@ -22,8 +22,16 @@ Route::group(['middleware' => ['auth:sanctum']], function ()
 {
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::group(['prefix' => 'profile'], function () 
+    {
+        Route::any('/', [APIController::class, 'getProfileCustomer']);
+        Route::post('/change', [APIController::class, 'changeProfileCustomer']);
+        Route::post('/password', [APIController::class, 'changePasswordCustomer']);
+    });
+    
+    Route::any('/kategori', [APIController::class, 'getKategori']);
+    Route::any('/produk', [APIController::class, 'getProduk']);
     // Route::any('/quotes', [APIController::class, 'getQuotes']);
-    // Route::any('/category', [APIController::class, 'getDataCategory']);
 
     // Route::group(['prefix' => 'news'], function () 
     // {
@@ -32,12 +40,6 @@ Route::group(['middleware' => ['auth:sanctum']], function ()
     //     Route::post('/detail', [APIController::class, 'getDetailNews']);
     // });
 
-    Route::group(['prefix' => 'profile'], function () 
-    {
-        Route::any('/', [APIController::class, 'getProfileCustomer']);
-        Route::post('/change', [APIController::class, 'changeProfileCustomer']);
-        Route::post('/password', [APIController::class, 'changePasswordCustomer']);
-    });
 
     // Route::group(['prefix' => 'activity'], function () 
     // {
