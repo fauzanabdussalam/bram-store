@@ -52,7 +52,7 @@
             </div> <!-- end Panel -->
         </div>
     </div>
-  </div> 
+</div> 
   
   <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog"> 

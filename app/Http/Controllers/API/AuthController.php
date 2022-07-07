@@ -15,7 +15,9 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'name'      => 'required|string|max:255',
+            'phone'     => 'required',
             'email'     => 'required|string|email|max:255|unique:customer',
+            'address'   => 'required|string',
             'password'  => 'required|string|min:6',
         ]);
 
@@ -31,20 +33,17 @@ class AuthController extends Controller
 
         $customer = Customer::create([
             'name'      => $request->name,
+            'phone'     => $request->phone,
             'email'     => $request->email,
-            'password'  => Hash::make($request->password),
-            'birthdate' => $request->birthdate,
-            'gender'    => $request->gender,
-            'weight'    => $request->weight,
-            'height'    => $request->height,
-            'picture'   => null,
+            'address'   => $request->address,
+            'password'  => Hash::make($request->password)
          ]);
 
         $token = $customer->createToken('auth_token')->plainTextToken;
 
         $response = [
             'status'    => 'success',
-            'message'   => 'Register successfully',
+            'message'   => 'Register success',
             'content'   => [
                 'data'          => $customer,
                 'access_token'  => $token,

@@ -13,6 +13,7 @@ use App\Models\Kategori;
 use App\Models\Produk;
 use App\Models\Ulasan;
 use App\Models\Customer;
+use App\Models\CustomerAddress;
 use App\Models\User;
 
 class AdminController extends Controller
@@ -21,24 +22,25 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
         date_default_timezone_set('Asia/Jakarta');
+
+        $this->classKategori    = new Kategori();
+        $this->classProduk      = new Produk();
+        $this->classCustomer    = new Customer();
+        $this->classUser        = new User();
+
+        $this->status_trx = ['Belum Dibayar', 'Lunas', 'Batal', 'Diproses', 'Dikirim', 'Selesai'];
     }
 
     function index()
     {
-        $total_kategori     = Kategori::all()->count();
-        $total_produk     = Produk::all()->count();
-        $total_customer     = Customer::all()->count();
-        $total_user         = User::all()->count();
+        $data['total_kategori']     = Kategori::all()->count();
+        $data['total_produk']       = Produk::all()->count();
+        $data['total_pelanggan']    = Customer::all()->count();
+        $data['total_pengguna']     = User::all()->count();
 
         // $news = News::with("category", "user")->whereBetween('created_at', [date("Y-m-d")." 00:00:00", date("Y-m-d")." 23:59:59"])->get();
 
-        return view('admin/pages/dashboard', [
-            "total_kategori"    => $total_kategori,
-            "total_produk"        => $total_produk,
-            "total_pelanggan"   => $total_customer,
-            "total_pengguna"    => $total_user,
-            // "news"              => $news,
-        ]);
+        return view('admin/pages/dashboard', $data);
     }
 
     function swal($pages, $process)
@@ -101,9 +103,7 @@ class AdminController extends Controller
     
     function saveKategori(Request $request)
     {
-        $classKategori = new Kategori();
-
-        $id = ($request->id != "")?$request->id:$classKategori->getNextId();
+        $id = ($request->id != "")?$request->id:$this->classKategori->getNextId();
 
         if ($request->hasFile('icon'))
         {
@@ -155,15 +155,14 @@ class AdminController extends Controller
     function produk(Request $request)
     {   
         $filter     = ($request->filter!='')?$request->filter:0;
-        $kategori   = Kategori::orderBy('nama_kategori')->get();
         $produk     = Produk::with("kategori");
         $produk     = ($filter)?$produk->where('id_kategori', $filter)->get():$produk->get();
 
-        return view('admin/pages/produk', [
-            'filter'    => $filter,
-            'kategori'  => $kategori,
-            'produk'    => $produk,
-        ]);
+        $data['filter']     = $filter;
+        $data['kategori']   = Kategori::orderBy('nama_kategori')->get();
+        $data['produk']     = $produk;
+
+        return view('admin/pages/produk', $data);
     }
 
     function getDataProduk(Request $request)
@@ -172,12 +171,17 @@ class AdminController extends Controller
 
         return response()->json($data);
     }
+
+    function getListProdukByKategori(Request $request)
+    {
+        $data = Produk::where('id_kategori', $request->id)->where('stok', '>', 0)->orderBy('nama_produk')->get();
+        
+        return response()->json($data);
+    }
     
     function saveProduk(Request $request)
     {
-        $classProduk = new Produk();
-
-        $id = ($request->id != "")?$request->id:$classProduk->getNextId();
+        $id = ($request->id != "")?$request->id:$this->classProduk->getNextId();
         
         if ($request->hasFile('icon'))
         {
@@ -231,36 +235,30 @@ class AdminController extends Controller
         return response()->json($data);
     }
 
-    // function news(Request $request)
-    // {
-    //     $date_start = ($request->date_start!='')?$request->date_start:date('Y-m-d');
-    //     $date_end   = ($request->date_end!='')?$request->date_end:date('Y-m-d');
-    //     $filter     = ($request->filter!='')?$request->filter:0;
+    function transaksi(Request $request)
+    {
+        $data['date_start'] = ($request->date_start!='')?$request->date_start:date('Y-m-d');
+        $data['date_end']   = ($request->date_end!='')?$request->date_end:date('Y-m-d');
+        $data['filter']     = ($request->filter!='')?$request->filter:0;
+        $data['status']     = ($request->status!='')?$request->status:"";
+        $data['status_trx'] = $this->status_trx;
+        $data['kategori']   = Kategori::orderBy('nama_kategori')->get();
+        $data['pembayaran'] = Pembayaran::orderBy('nama_pembayaran')->get();
 
-    //     $news       = News::with("category", "user")->whereBetween('created_at', [$date_start." 00:00:00", $date_end." 23:59:59"]);
-    //     $news       = ($filter)?$news->where('id_category', $filter)->get():$news->get();
-    //     $category   = Category::orderBy('category_name')->get();
+        // $news       = News::with("category", "user")->whereBetween('created_at', [$date_start." 00:00:00", $date_end." 23:59:59"]);
+        // $news       = ($filter)?$news->where('id_category', $filter)->get():$news->get();
+        // $category   = Category::orderBy('category_name')->get();
 
-    //     return view('admin/pages/news', [
-    //         'news'          => $news,
-    //         'category'      => $category,
-    //         'date_start'    => $date_start,
-    //         'date_end'      => $date_end,
-    //         'filter'        => $filter,
-    //     ]);
-    // }
+        return view('admin/pages/transaksi', $data);
+    }
 
-    // function showDataNews($id="")
-    // {
-    //     $data       = ($id!="")?News::with("category", "user")->find($id):null;
-    //     $category   = Category::orderBy('category_name')->get();
+    function showDataTransaksi($id="")
+    {
+        $data['proses'] = ($id!="")?"Detail":"Add";
+        $data['trx']    = ($id!="")?News::with("category", "user")->find($id):null; 
 
-    //     return view('admin/pages/news_detail', [
-    //         'proses'    => ($id!="")?"Detail":"Add",
-    //         'data'      => $data,
-    //         'category'  => $category,
-    //     ]);
-    // }
+        return view('admin/pages/transaksi_detail', $data);
+    }
 
     function ulasan()
     {
@@ -278,15 +276,14 @@ class AdminController extends Controller
 
     function customer()
     {
-        $classCustomer  = new Customer();
-        $customer       = Customer::all();
+        $customer = Customer::all();
 
         $data = [];
         if(count($customer) > 0)
         {
             foreach($customer as $row)
             {
-                $row->jumlah_transaksi = $classCustomer->getJumlahTransaksi($row->id);
+                $row->jumlah_transaksi = $this->classCustomer->getJumlahTransaksi($row->id);
                 
                 $data[] = $row;
             }
@@ -298,6 +295,18 @@ class AdminController extends Controller
     function getDataCustomer(Request $request)
     {
         $data = Customer::find($request->id);
+
+        return response()->json($data);
+    }
+
+    function getDataCustomerByTelp(Request $request)
+    {
+        $data = Customer::where('phone', $request->telp)->first();
+        
+        if(!$data)
+        {
+            $data = CustomerAddress::where('phone', $request->telp)->first();
+        }
 
         return response()->json($data);
     }
@@ -318,8 +327,7 @@ class AdminController extends Controller
 
     function saveUsers(Request $request)
     {
-        $classUser = new User();
-        $data_user = $classUser->getDetailDataByUsername($request->username)->first();
+        $data_user = $this->classUser->getDetailDataByUsername($request->username)->first();
         
         if(!empty($data_user->id) && ($data_user->id != $request->id))
         {

@@ -44,12 +44,14 @@ Route::group(['prefix' => 'admin'], function ()
         Route::post('data', [AdminController::class, 'getDataProduk'])->name('produk.data');
         Route::post('save', [AdminController::class, 'saveProduk'])->name('produk.save');
         Route::post('delete', [AdminController::class, 'deleteProduk'])->name('produk.delete');
+        Route::post('list', [AdminController::class, 'getListProdukByKategori'])->name('produk.list');
     });
 
     Route::group(['prefix' => 'transaksi'], function () 
     {
         Route::get('/', [AdminController::class, 'transaksi'])->name('transaksi');
-        Route::post('data', [AdminController::class, 'getDataTransaksi'])->name('transaksi.data');
+        Route::get('add', [AdminController::class, 'showDataTransaksi'])->name('transaksi.add');
+        Route::get('detail/{id}', [AdminController::class, 'showDataTransaksi'])->name('transaksi.detail');
         Route::post('save', [AdminController::class, 'saveTransaksi'])->name('transaksi.save');
         Route::post('delete', [AdminController::class, 'deleteTransaksi'])->name('transaksi.delete');
     });
@@ -64,6 +66,7 @@ Route::group(['prefix' => 'admin'], function ()
     {
         Route::get('/', [AdminController::class, 'customer'])->name('customer');
         Route::post('data', [AdminController::class, 'getDataCustomer'])->name('customer.data');
+        Route::post('data2', [AdminController::class, 'getDataCustomerByTelp'])->name('customer.data2');
     });
 
     Route::group(['prefix' => 'users'], function () 

@@ -16,7 +16,7 @@ class CreateTransaksiTable extends Migration
         Schema::create('transaksi', function (Blueprint $table) {
             $table->string('nomor_transaksi', 20);
             $table->primary('nomor_transaksi');
-            $table->timestamp('waktu_pembelian');
+            $table->timestamp('waktu_transaksi');
             $table->unsignedBigInteger('id_customer');
             $table->foreign('id_customer')->references('id')->on('customer')->onDelete('NO ACTION');
             $table->unsignedBigInteger('id_customer_address');

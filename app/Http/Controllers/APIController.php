@@ -178,48 +178,13 @@ class APIController extends Controller
         return $customer;
     }
 
-    function registerProfileCustomer(Request $request)
-    {
-        $validator = Validator::make($request->all(),[
-            'birthdate' => 'required|date',
-            'gender'    => 'required',
-            'weight'    => 'required',
-            'height'    => 'required',
-        ]);
-
-        if($validator->fails())
-        {
-            $response = [
-                'status'    => 'error',
-                'message'   => $validator->errors()->first()
-            ];
-
-            return response()->json($response, 400);       
-        }
-
-        $data = [
-            'birthdate' => $request->birthdate,
-            'gender'    => $request->gender,
-            'weight'    => $request->weight,
-            'height'    => $request->height,
-        ];
-
-        Customer::find(Auth::user()->id)->update($data);
-
-        $ret['status']  = "success";
-        $ret['message'] = "Profile changed successfully!";
-
-        return response()->json($ret);
-    }
-
     function changeProfileCustomer(Request $request) {
 
         $validator = Validator::make($request->all(),[
-            'birthdate' => 'required|date',
-            'gender'    => 'required',
-            'weight'    => 'required',
-            'height'    => 'required',
-            'name' => 'required',
+            'name'      => 'required|string',
+            'phone'     => 'required',
+            'email'     => 'required|string|email',
+            'address'   => 'required|string'
         ]);
 
         if($validator->fails())
@@ -230,58 +195,35 @@ class APIController extends Controller
             ];
 
             return response()->json($response, 400);       
-        }
-
-        if ($request->hasFile('picture'))
-        {
-            $destinationPath    = "images/customer";
-            $file               = $request->picture;
-            $fileName           = Auth::user()->id.".".$file->getClientOriginalExtension();
-            $pathfile           = $destinationPath.'/'.$fileName;
-
-            if(Auth::user()->picture != "")
-            {
-                File::delete($destinationPath."/".Auth::user()->picture);
-            }
-
-            $file->move($destinationPath, $fileName); 
-
-            $picture = $fileName;
-        }
-        else
-        {
-            $picture = Auth::user()->picture;
         }
 
         $customer = [
             'name'      => $request->name,
+            'phone'     => $request->phone,
+            'email'     => $request->email,
+            'address'   => $request->address,
             'birthdate' => date('Y-m-d', strtotime($request->birthdate)),
             'gender'    => $request->gender,
-            'weight'    => $request->weight,
-            'height'    => $request->height,
-            'picture'   => $picture,
+            'picture'   => $request->picture
         ];
 
         Customer::find(Auth::user()->id)->update($customer);
 
-        $customer['picture'] = ($picture != "")?URL::asset('images/customer').'/'.$picture:"";
-
         $response = [
             'status'    => 'success',
-            'message'   => 'Register successfully',
+            'message'   => 'Change Profile Success',
             'content'   => [
-                'data'          => $customer,
+                'data' => $customer,
             ]
         ];
 
         return response()->json($response, 200);
     }
 
-
     function changePasswordCustomer(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'old_password'          => 'required|string|min:6',
+            'old_password'          => 'required|string',
             'new_password'          => 'required|string|min:6',
             'confirm_new_password'  => 'required|string|min:6'
         ]);
