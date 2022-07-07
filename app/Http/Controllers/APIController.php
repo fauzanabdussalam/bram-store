@@ -11,6 +11,7 @@ use File;
 use App\Models\Customer;
 use App\Models\Kategori;
 use App\Models\Produk;
+use App\Models\Pembayaran;
 
 class APIController extends Controller
 {
@@ -287,6 +288,16 @@ class APIController extends Controller
                 "stok"              => $row->stok
             ];
         }
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function getPembayaran()
+    {
+        $data = Pembayaran::orderBy('nama_pembayaran')->get();
 
         $ret['status']  = "success";
         $ret['data']    = $data;

@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth:sanctum']], function ()
     
     Route::any('/kategori', [APIController::class, 'getKategori']);
     Route::any('/produk', [APIController::class, 'getProduk']);
-    // Route::any('/quotes', [APIController::class, 'getQuotes']);
+    Route::any('/pembayaran', [APIController::class, 'getPembayaran']);
 
     // Route::group(['prefix' => 'news'], function () 
     // {
