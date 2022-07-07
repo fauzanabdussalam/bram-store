@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Http;
 use Auth;
 use Validator;
 use File;
@@ -18,6 +19,8 @@ class APIController extends Controller
     function __construct()
     {
         date_default_timezone_set('Asia/Jakarta');
+        $this->url_api = 'https://api.rajaongkir.com/starter/';
+        $this->api_key = '19ddbb5173b42a658d9e8b5f48a2b2b4';
     }
 
     function getQuotes()
@@ -301,6 +304,79 @@ class APIController extends Controller
 
         $ret['status']  = "success";
         $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function getProvinsi()
+    {
+        $response = Http::get($this->url_api."/province", [
+            'key' => $this->api_key
+        ]);
+
+        $data = [];
+        foreach($response['rajaongkir']['results'] as $value)
+        {
+            $data[] = [
+                "id"        => $value['province_id'],
+                "provinsi"  => $value['province']
+            ];
+        }
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function getKota(Request $request)
+    {
+        $response = Http::get($this->url_api."/city", [
+            'key'       => $this->api_key,
+            'province'  => $request->id_provinsi
+        ]);
+
+        $data = [];
+        foreach($response['rajaongkir']['results'] as $value)
+        {
+            $data[] = [
+                "id"    => $value['city_id'],
+                "kota"  => $value['type'] . " " . $value['city_name']
+            ];
+        }
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function getKurir()
+    {
+        $data = [
+            ["kode" => "jne", "nama" => "JNE"],
+            ["kode" => "pos", "nama" => "POS"],
+            ["kode" => "tiki", "nama" => "TIKI"],
+        ];
+        
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function getLayananKurir(Request $request)
+    {
+        $response = Http::post($this->url_api."/cost", [
+            'key'           => $this->api_key,
+            'origin'        => $request->id_kota_asal,
+            'destination'   => $request->id_kota_tujuan,
+            'weight'        => $request->berat,
+            'courier'       => $request->kurir
+        ]);
+
+        $ret['status']  = "success";
+        $ret['data']    = $response['rajaongkir']['results'][0]['costs'];
 
         return response()->json($ret);
     }
