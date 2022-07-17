@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\DB;
 class KategoriSeeder extends Seeder
 {
     private $data = [
-        ['nama_kategori' => 'Makanan', 'jenis' => 0, 'icon' => ''],
-        ['nama_kategori' => 'Pakaian', 'jenis' => 0, 'icon' => ''],
+        ['nama_kategori' => 'Baju', 'jenis' => 0, 'icon' => '1.png'],
+        ['nama_kategori' => 'Celana', 'jenis' => 0, 'icon' => '2.png'],
+        ['nama_kategori' => 'Sepatu', 'jenis' => 0, 'icon' => '3.png'],
+        ['nama_kategori' => 'Jam Tangan', 'jenis' => 0, 'icon' => '4.png'],
+        ['nama_kategori' => 'Kacamata', 'jenis' => 0, 'icon' => '5.png'],
         ['nama_kategori' => 'Jasa', 'jenis' => 1, 'icon' => ''],
     ];
 

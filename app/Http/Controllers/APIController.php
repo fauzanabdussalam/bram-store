@@ -13,146 +13,152 @@ use App\Models\Customer;
 use App\Models\Kategori;
 use App\Models\Produk;
 use App\Models\Pembayaran;
+use App\Models\Provinsi;
+use App\Models\Kota;
+use App\Models\Transaksi;
 
 class APIController extends Controller
 {
     function __construct()
     {
         date_default_timezone_set('Asia/Jakarta');
+        $this->classProduk      = new Produk();
+        $this->classTransaksi   = new Transaksi();
+
         $this->url_api = 'https://api.rajaongkir.com/starter/';
         $this->api_key = '19ddbb5173b42a658d9e8b5f48a2b2b4';
     }
 
-    function getQuotes()
-    {
-        $data = Quotes::all()->random(1);
+    // function getQuotes()
+    // {
+    //     $data = Quotes::all()->random(1);
 
-        $ret['status']  = "success";
-        $ret['data']    = $data;
+    //     $ret['status']  = "success";
+    //     $ret['data']    = $data;
 
-        return response()->json($ret);
-    }
+    //     return response()->json($ret);
+    // }
 
-    function getDataActivity(Request $request)
-    {
-        $classActivity = new Activity();
+    // function getDataActivity(Request $request)
+    // {
+    //     $classActivity = new Activity();
 
-        $date           = !empty($request->date)?$request->date:date("Y-m-d");
-        $id_customer    = Auth::user()->id;
+    //     $date           = !empty($request->date)?$request->date:date("Y-m-d");
+    //     $id_customer    = Auth::user()->id;
 
-        $trackers   = $classActivity->getTracker($date, $id_customer)->get();
-        $tracker    = [];
-        foreach($trackers as $row)
-        {
-            $tracker[$row->id_activity] = 1;
-        }
+    //     $trackers   = $classActivity->getTracker($date, $id_customer)->get();
+    //     $tracker    = [];
+    //     foreach($trackers as $row)
+    //     {
+    //         $tracker[$row->id_activity] = 1;
+    //     }
 
-        $activities = Activity::orderBy('order')->get();
-        foreach($activities as $row)
-        {
-            $data[] = [
-                'id'            => $row->id,
-                'activity_name' => $row->activity_name,
-                'icon'          => URL::asset('images/activity').'/'.$row->icon,
-                'checked'       => isset($tracker[$row->id])?1:0
-            ];
-        }
+    //     $activities = Activity::orderBy('order')->get();
+    //     foreach($activities as $row)
+    //     {
+    //         $data[] = [
+    //             'id'            => $row->id,
+    //             'activity_name' => $row->activity_name,
+    //             'icon'          => URL::asset('images/activity').'/'.$row->icon,
+    //             'checked'       => isset($tracker[$row->id])?1:0
+    //         ];
+    //     }
 
-        $ret['status']  = "success";
-        $ret['data']    = $data;
+    //     $ret['status']  = "success";
+    //     $ret['data']    = $data;
 
-        return response()->json($ret);
-    }
+    //     return response()->json($ret);
+    // }
 
-    function setCheckActivity(Request $request)
-    {
-        $classActivity  = new Activity();
+    // function setCheckActivity(Request $request)
+    // {
+    //     $classActivity  = new Activity();
 
-        $date           = !empty($request->date)?$request->date:date("Y-m-d");
-        $id_customer    = Auth::user()->id;
+    //     $date           = !empty($request->date)?$request->date:date("Y-m-d");
+    //     $id_customer    = Auth::user()->id;
 
-        $update = $classActivity->checklistTracker($date, $id_customer, $request->id_activity, $request->checked);
+    //     $update = $classActivity->checklistTracker($date, $id_customer, $request->id_activity, $request->checked);
 
-        $ret['status']  = "success";
+    //     $ret['status']  = "success";
         
-        return response()->json($ret);
-    }
+    //     return response()->json($ret);
+    // }
 
-    function getDataNews(Request $request)
-    {
-        $news = News::with("category", "user")->select('news.*', 'category_name')->leftJoin('category', 'news.id_category', '=', 'category.id_category');
-        $news = ($request->exists('id_category') && $request->id_category!="")?$news->where('news.id_category', $request->id_category):$news;
-        $news = ($request->exists('keyword') && $request->keyword)?$news->where('title', 'LIKE', '%'.$request->keyword.'%')->orWhere('category_name', 'LIKE', '%'.$request->keyword.'%'):$news;
-        $news = $news->orderBy('created_at', 'desc')->get();
+    // function getDataNews(Request $request)
+    // {
+    //     $news = News::with("category", "user")->select('news.*', 'category_name')->leftJoin('category', 'news.id_category', '=', 'category.id_category');
+    //     $news = ($request->exists('id_category') && $request->id_category!="")?$news->where('news.id_category', $request->id_category):$news;
+    //     $news = ($request->exists('keyword') && $request->keyword)?$news->where('title', 'LIKE', '%'.$request->keyword.'%')->orWhere('category_name', 'LIKE', '%'.$request->keyword.'%'):$news;
+    //     $news = $news->orderBy('created_at', 'desc')->get();
 
-        $data = [];
-        foreach($news as $row)
-        {
-            $data[] = [
-                "id_news"       => $row->id_news,
-                "title"         => $row->title,
-                'category_name' => $row->category_name,
-                'thumbnail'     => URL::asset('images/news').'/'.$row->thumbnail,
-            ];
-        }
+    //     $data = [];
+    //     foreach($news as $row)
+    //     {
+    //         $data[] = [
+    //             "id_news"       => $row->id_news,
+    //             "title"         => $row->title,
+    //             'category_name' => $row->category_name,
+    //             'thumbnail'     => URL::asset('images/news').'/'.$row->thumbnail,
+    //         ];
+    //     }
 
-        $ret['status']  = "success";
-        $ret['data']    = $data;
+    //     $ret['status']  = "success";
+    //     $ret['data']    = $data;
 
-        return response()->json($ret);
-    }
+    //     return response()->json($ret);
+    // }
 
-    function getRecommendedNews(Request $request)
-    {
-        $news = News::with("category", "user")
-                ->select('news.*', 'category_name')
-                ->leftJoin('category', 'news.id_category', '=', 'category.id_category')
-                ->where('is_recommended', 1)
-                ->orderBy('created_at', 'desc')
-                ->offset(0)
-                ->limit($request->limit)
-                ->get();
+    // function getRecommendedNews(Request $request)
+    // {
+    //     $news = News::with("category", "user")
+    //             ->select('news.*', 'category_name')
+    //             ->leftJoin('category', 'news.id_category', '=', 'category.id_category')
+    //             ->where('is_recommended', 1)
+    //             ->orderBy('created_at', 'desc')
+    //             ->offset(0)
+    //             ->limit($request->limit)
+    //             ->get();
 
-        $data = [];
-        foreach($news as $row)
-        {
-            $data[] = [
-                "id_news"       => $row->id_news,
-                "title"         => $row->title,
-                'category_name' => $row->category_name,
-                'thumbnail'     => URL::asset('images/news').'/'.$row->thumbnail,
-            ];
-        }
+    //     $data = [];
+    //     foreach($news as $row)
+    //     {
+    //         $data[] = [
+    //             "id_news"       => $row->id_news,
+    //             "title"         => $row->title,
+    //             'category_name' => $row->category_name,
+    //             'thumbnail'     => URL::asset('images/news').'/'.$row->thumbnail,
+    //         ];
+    //     }
 
-        $ret['status']  = "success";
-        $ret['data']    = $data;
+    //     $ret['status']  = "success";
+    //     $ret['data']    = $data;
 
-        return response()->json($ret);
-    }
+    //     return response()->json($ret);
+    // }
 
-    function getDetailNews(Request $request)
-    {
-        $data = News::with("category", "user")
-        ->select('news.*', 'category_name')
-        ->leftJoin('category', 'news.id_category', '=', 'category.id_category')
-        ->where('id_news', $request->id_news)
-        ->first();
+    // function getDetailNews(Request $request)
+    // {
+    //     $data = News::with("category", "user")
+    //     ->select('news.*', 'category_name')
+    //     ->leftJoin('category', 'news.id_category', '=', 'category.id_category')
+    //     ->where('id_news', $request->id_news)
+    //     ->first();
         
-        if(!empty($data))
-        {
-            $data->thumbnail = URL::asset('images/news').'/'.$data->thumbnail;
+    //     if(!empty($data))
+    //     {
+    //         $data->thumbnail = URL::asset('images/news').'/'.$data->thumbnail;
 
-            $ret['status']  = "success";
-            $ret['data']    = $data;
-        }
-        else
-        {
-            $ret['status']  = "error";
-            $ret['message'] = "News Not Found!";
-        }
+    //         $ret['status']  = "success";
+    //         $ret['data']    = $data;
+    //     }
+    //     else
+    //     {
+    //         $ret['status']  = "error";
+    //         $ret['message'] = "News Not Found!";
+    //     }
 
-        return response()->json($ret);
-    }
+    //     return response()->json($ret);
+    // }
 
     function getProfileCustomer()
     {
@@ -274,23 +280,46 @@ class APIController extends Controller
 
         $data = [];
         foreach($produk as $row)
-        { 
+        {
             $data[] = [
                 "id"                => $row->id,
                 "nama_produk"       => $row->nama_produk,
-                "jenis_produk"      => (!$row->jenis_produk)?"Barang":"Jasa",
                 "kategori"          => $row->nama_kategori,
                 "kondisi"           => (!$row->kondisi)?"Baru":"Bekas",
                 "jenis_pembelian"   => (!$row->jenis)?"Langsung":"Pre-Order",
-                "berat"             => $row->berat . " gr",
                 "warna"             => $row->warna,
                 "ukuran"            => empty($row->ukuran)?[]:explode(",", $row->ukuran),
                 "harga"             => (int)$row->harga,
-                "deskripsi"         => $row->deskripsi,
                 "gambar"            => URL::asset('images/produk').'/'.$row->gambar,
                 "stok"              => $row->stok
             ];
         }
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function getDetailProduk(Request $request)
+    {
+        $row = Produk::with('kategori')->find($request->id);
+        
+        $data[] = [
+            "id"                => $row->id,
+            "nama_produk"       => $row->nama_produk,
+            "jenis_produk"      => (!$row->jenis_produk)?"Barang":"Jasa",
+            "kategori"          => $row->kategori->nama_kategori,
+            "kondisi"           => (!$row->kondisi)?"Baru":"Bekas",
+            "jenis_pembelian"   => (!$row->jenis)?"Langsung":"Pre-Order",
+            "berat"             => $row->berat . " gr",
+            "warna"             => $row->warna,
+            "ukuran"            => empty($row->ukuran)?[]:explode(",", $row->ukuran),
+            "harga"             => (int)$row->harga,
+            "deskripsi"         => $row->deskripsi,
+            "gambar"            => URL::asset('images/produk').'/'.$row->gambar,
+            "stok"              => $row->stok
+        ];
 
         $ret['status']  = "success";
         $ret['data']    = $data;
@@ -310,43 +339,16 @@ class APIController extends Controller
 
     function getProvinsi()
     {
-        $response = Http::get($this->url_api."/province", [
-            'key' => $this->api_key
-        ]);
-
-        $data = [];
-        foreach($response['rajaongkir']['results'] as $value)
-        {
-            $data[] = [
-                "id"        => $value['province_id'],
-                "provinsi"  => $value['province']
-            ];
-        }
-
         $ret['status']  = "success";
-        $ret['data']    = $data;
+        $ret['data']    = Provinsi::all();
 
         return response()->json($ret);
     }
 
     function getKota(Request $request)
     {
-        $response = Http::get($this->url_api."/city", [
-            'key'       => $this->api_key,
-            'province'  => $request->id_provinsi
-        ]);
-
-        $data = [];
-        foreach($response['rajaongkir']['results'] as $value)
-        {
-            $data[] = [
-                "id"    => $value['city_id'],
-                "kota"  => $value['type'] . " " . $value['city_name']
-            ];
-        }
-
         $ret['status']  = "success";
-        $ret['data']    = $data;
+        $ret['data']    = Kota::where('id_provinsi', $request->id_provinsi)->orderBy('nama_kota')->get();;
 
         return response()->json($ret);
     }
@@ -377,6 +379,136 @@ class APIController extends Controller
 
         $ret['status']  = "success";
         $ret['data']    = $response['rajaongkir']['results'][0]['costs'];
+
+        return response()->json($ret);
+    }
+
+    function hitungTotalTransaksi(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'list_produk'       => 'required|string',
+            'qty_produk'        => 'required|string',
+            'kurir'             => 'required|string',
+            'layanan_kurir'     => 'required|string'
+        ]);
+
+        if($validator->fails())
+        {
+            $response = [
+                'status'    => 'error',
+                'message'   => $validator->errors()->first()
+            ];
+
+            return response()->json($response, 400);       
+        }
+
+        $parameter = [
+            "id_customer"   => auth()->user()->id,
+            "list_produk"   => $request->list_produk,
+            "qty_produk"    => $request->qty_produk,
+            "kurir"         => $request->kurir,
+            "layanan_kurir" => $request->layanan_kurir
+        ];
+
+        $data = $this->classTransaksi->hitungTotal($parameter);
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function addTransaksi(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'list_produk'       => 'required|string',
+            'qty_produk'        => 'required|string',
+            'kurir'             => 'required|string',
+            'layanan_kurir'     => 'required|string',
+            'pembayaran'        => 'required',
+        ]);
+        
+        if($validator->fails())
+        {
+            $response = [
+                'status'    => 'error',
+                'message'   => $validator->errors()->first()
+            ];
+
+            return response()->json($response, 400);       
+        }
+
+        $nomor_transaksi = $this->classTransaksi->generateNomorTransaksi();
+        
+        $arr_produk = explode(",", $request->list_produk);
+        $arr_qty    = explode(",", $request->qty_produk);
+        $i          = 0;
+        foreach($arr_produk as $id_produk)
+        {
+            $data_produk = Produk::with('kategori')->find($id_produk);
+
+            $list_produk[] = [
+                "id"                => $id_produk,
+                "name"              => $data_produk->nama_produk,
+                "kategori"          => $data_produk->kategori->nama_kategori,
+                "jenis_kategori"    => $data_produk->kategori->jenis,
+                "price"             => (int)$data_produk->harga,
+                "quantity"          => (int)$arr_qty[$i],
+                "total"             => (int)$data_produk->harga * $arr_qty[$i]  
+            ];
+
+            $this->classProduk->updateStok($id_produk, -$arr_qty[$i]);
+
+            $i++;
+        }
+
+        $parameter = [
+            "id_customer"   => auth()->user()->id,
+            "list_produk"   => $request->list_produk,
+            "qty_produk"    => $request->qty_produk,
+            "kurir"         => $request->kurir,
+            "layanan_kurir" => $request->layanan_kurir
+        ];
+
+        $data_total = $this->classTransaksi->hitungTotal($parameter);
+
+        $customer = auth()->user();
+
+        $data = array(
+            'nomor_transaksi'   => $nomor_transaksi,
+            'waktu_transaksi'   => date('Y-m-d H:i:s'),
+            'id_customer'       => $customer->id,
+            'telp'              => $customer->phone,
+            'nama'              => $customer->name,
+            'alamat'            => $customer->address,
+            'list_produk'       => json_encode($list_produk),
+            'sub_total'         => $data_total['subtotal'],
+            'biaya_ongkir'      => $data_total['biaya_ongkir'],
+            'diskon'            => 0,
+            'total_bayar'       => $data_total['total'],
+            'status'            => 0,
+            'id_pembayaran'     => $request->pembayaran,
+            'bukti_pembayaran'  => "",
+            'kurir'             => $request->kurir,
+            'layanan_kurir'     => $request->layanan_kurir,
+            'nomor_resi'        => "",
+            'tracking'          => "",
+        );
+
+        Transaksi::create($data); 
+
+        $ret['status']  = "success";
+        $ret['data']    = $nomor_transaksi;
+
+        return response()->json($ret);
+    }
+
+    function listTransaksi()
+    {
+        $data = Transaksi::where('id_customer', auth()->user()->id)->get();
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
 
         return response()->json($ret);
     }

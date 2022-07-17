@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,8 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function () 
 {    
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    Route::post('kota/list', [AdminController::class, 'getKotaByProvinsi'])->name('kota.list');
+    Route::post('kurir/layanan', [AdminController::class, 'getLayananKurir'])->name('kurir.layanan');
     
     Route::group(['prefix' => 'pembayaran'], function () 
     {
@@ -50,10 +53,19 @@ Route::group(['prefix' => 'admin'], function ()
     Route::group(['prefix' => 'transaksi'], function () 
     {
         Route::get('/', [AdminController::class, 'transaksi'])->name('transaksi');
-        Route::get('add', [AdminController::class, 'showDataTransaksi'])->name('transaksi.add');
-        Route::get('detail/{id}', [AdminController::class, 'showDataTransaksi'])->name('transaksi.detail');
+        Route::get('add', [AdminController::class, 'inputTransaksi'])->name('transaksi.add');
+        Route::get('detail/{id}', [AdminController::class, 'detailTransaksi'])->name('transaksi.detail');
+        Route::post('status', [AdminController::class, 'setStatusTransaksi'])->name('transaksi.status');
         Route::post('save', [AdminController::class, 'saveTransaksi'])->name('transaksi.save');
         Route::post('delete', [AdminController::class, 'deleteTransaksi'])->name('transaksi.delete');
+    });
+
+    Route::group(['prefix' => 'cart'], function () 
+    {
+        Route::post('/', [CartController::class, 'cart'])->name('cart');
+        Route::post('clear', [CartController::class, 'clear'])->name('cart.clear');
+        Route::post('add', [CartController::class, 'add'])->name('cart.add');
+        Route::post('remove', [CartController::class, 'remove'])->name('cart.remove');
     });
 
     Route::group(['prefix' => 'ulasan'], function () 

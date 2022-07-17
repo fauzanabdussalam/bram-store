@@ -38,4 +38,13 @@ class Produk extends Model
 
         return $statement[0]->Auto_increment;
     }
+
+    public function updateStok($id, $qty)
+    {
+        $produk = $this->find($id);
+        $produk->stok = $produk->stok + $qty;
+        $produk->save();
+        
+        return true;
+    }
 }

@@ -43,7 +43,6 @@
         <!-- Plugins css-->
         <link href="{{URL::asset('assets')}}/assets/tagsinput/jquery.tagsinput.css" rel="stylesheet" />
         {{-- <link href="{{URL::asset('assets')}}/assets/toggles/toggles.css" rel="stylesheet" /> --}}
-        <link href="{{URL::asset('assets')}}/assets/bootstrap-toggle/bootstrap-toggle.min.css" rel="stylesheet" />
         <link href="{{URL::asset('assets')}}/assets/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
         <link href="{{URL::asset('assets')}}/assets/timepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
         <link href="{{URL::asset('assets')}}/assets/colorpicker/colorpicker.css" rel="stylesheet" type="text/css" />
@@ -364,7 +363,6 @@
 
         <script src="{{URL::asset('assets')}}/assets/tagsinput/jquery.tagsinput.min.js"></script>
         {{-- <script src="{{URL::asset('assets')}}/assets/toggles/toggles.min.js"></script> --}}
-        <script src="{{URL::asset('assets')}}/assets/bootstrap-toggle/bootstrap-toggle.min.js"></script>
         <script src="{{URL::asset('assets')}}/assets/timepicker/bootstrap-timepicker.min.js"></script>
         <script src="{{URL::asset('assets')}}/assets/timepicker/bootstrap-datepicker.js"></script>
         <script type="text/javascript" src="{{URL::asset('assets')}}/assets/colorpicker/bootstrap-colorpicker.js"></script>

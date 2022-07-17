@@ -18,6 +18,8 @@ class CreateCustomerTable extends Migration
             $table->string('phone', 15);
             $table->string('name', 100);
             $table->string('email', 100)->unique();
+            $table->unsignedBigInteger('city')->nullable();
+            $table->foreign('city')->references('id')->on('kota')->onDelete('NO ACTION');
             $table->text('address')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('gender', 15)->nullable();

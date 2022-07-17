@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Kota;
 
 class Customer extends Authenticatable
 {
@@ -27,6 +28,7 @@ class Customer extends Authenticatable
         'phone',
         'name',
         'email',
+        'city',
         'address',
         'birthdate',
         'gender',
@@ -44,10 +46,22 @@ class Customer extends Authenticatable
         'remember_token',
     ];
 
+    public function kota()
+    {
+        return $this->belongsTo(Kota::class, 'city');
+    }
+
     public function getJumlahTransaksi($id) 
     {
         $query = DB::table('transaksi')->where("id_customer", $id);
 
         return 0;
+    }
+
+    public function getNextId() 
+    {
+        $statement = DB::select("show table status like 'customer'");
+
+        return $statement[0]->Auto_increment;
     }
 }

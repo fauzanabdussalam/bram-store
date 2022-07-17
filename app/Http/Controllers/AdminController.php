@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Http;
 use File;
 
 use App\Models\Pembayaran;
@@ -13,8 +15,10 @@ use App\Models\Kategori;
 use App\Models\Produk;
 use App\Models\Ulasan;
 use App\Models\Customer;
-use App\Models\CustomerAddress;
 use App\Models\User;
+use App\Models\Provinsi;
+use App\Models\Kota;
+use App\Models\Transaksi;
 
 class AdminController extends Controller
 {
@@ -27,8 +31,25 @@ class AdminController extends Controller
         $this->classProduk      = new Produk();
         $this->classCustomer    = new Customer();
         $this->classUser        = new User();
+        $this->classTransaksi   = new Transaksi();
 
-        $this->status_trx = ['Belum Dibayar', 'Lunas', 'Batal', 'Diproses', 'Dikirim', 'Selesai'];
+        $this->url_api      = 'https://api.rajaongkir.com/starter/';
+        $this->api_key      = '19ddbb5173b42a658d9e8b5f48a2b2b4';
+        $this->status_trx   = [
+            '0' => 'Belum Dibayar', 
+            '6' => 'Menunggu Verifikasi', 
+            '1' => 'Lunas', 
+            '2' => 'Batal', 
+            '3' => 'Diproses', 
+            '4' => 'Dikirim', 
+            '5' => 'Selesai'
+        ];
+
+        $this->kurir        = [
+            ["kode" => "jne", "nama" => "JNE"],
+            // ["kode" => "pos", "nama" => "POS"],
+            ["kode" => "tiki", "nama" => "TIKI"],
+        ];
     }
 
     function index()
@@ -168,13 +189,14 @@ class AdminController extends Controller
     function getDataProduk(Request $request)
     {
         $data = Produk::find($request->id);
+        $data->arr_ukuran = explode(",", $data->ukuran);
 
         return response()->json($data);
     }
 
     function getListProdukByKategori(Request $request)
     {
-        $data = Produk::where('id_kategori', $request->id)->where('stok', '>', 0)->orderBy('nama_produk')->get();
+        $data = Produk::with('kategori')->where('id_kategori', $request->id)->where('stok', '>', 0)->orderBy('nama_produk')->get();
         
         return response()->json($data);
     }
@@ -242,25 +264,140 @@ class AdminController extends Controller
     {
         $data['date_start'] = ($request->date_start!='')?$request->date_start:date('Y-m-d');
         $data['date_end']   = ($request->date_end!='')?$request->date_end:date('Y-m-d');
-        $data['filter']     = ($request->filter!='')?$request->filter:0;
         $data['status']     = ($request->status!='')?$request->status:"";
         $data['status_trx'] = $this->status_trx;
-        $data['kategori']   = Kategori::orderBy('nama_kategori')->get();
-        $data['pembayaran'] = Pembayaran::orderBy('nama_pembayaran')->get();
-
-        // $news       = News::with("category", "user")->whereBetween('created_at', [$date_start." 00:00:00", $date_end." 23:59:59"]);
-        // $news       = ($filter)?$news->where('id_category', $filter)->get():$news->get();
-        // $category   = Category::orderBy('category_name')->get();
+        
+        $trx    = Transaksi::whereBetween('waktu_transaksi', [$data['date_start']." 00:00:00", $data['date_end']." 23:59:59"]);
+        $trx    = ($request->status!='')?$trx->where('status', $request->status)->get():$trx->get();
+        
+        $data['transaksi']  = $trx;
 
         return view('admin/pages/transaksi', $data);
     }
 
-    function showDataTransaksi($id="")
+    function inputTransaksi($id="")
     {
-        $data['proses'] = ($id!="")?"Detail":"Add";
-        $data['trx']    = ($id!="")?News::with("category", "user")->find($id):null; 
+        $data['provinsi']   = Provinsi::orderBy('nama_provinsi')->get();
+        $data['kategori']   = Kategori::orderBy('nama_kategori')->get();
+        $data['pembayaran'] = Pembayaran::orderBy('nama_pembayaran')->get();
+        $data['status_trx'] = $this->status_trx;
+        $data['kurir']      = $this->kurir;
 
+        return view('admin/pages/transaksi_input', $data);
+    }
+
+    function saveTransaksi(Request $request)
+    {
+        $nomor_transaksi = $this->classTransaksi->generateNomorTransaksi();
+
+        $data_customer  = Customer::find($request->telp);
+        $id_customer    = ($data_customer)?$data_customer->id:null;
+
+        $cart = \Cart::getContent();
+
+        $list_produk = [];
+        foreach($cart as $produk)
+        {
+            $list_produk[] = [
+                "id"                => $produk->id,
+                "name"              => $produk->name,
+                "kategori"          => $produk->associatedModel->kategori->nama_kategori,
+                "jenis_kategori"    => $produk->associatedModel->kategori->jenis,
+                "price"             => (int)$produk->associatedModel->harga,
+                "quantity"          => (int)$produk->quantity,
+                "total"             => (int)$produk->associatedModel->harga * $produk->quantity       
+            ];
+
+            $this->classProduk->updateStok($produk->id, -$produk->quantity);
+        }
+
+        $sub_total = \Cart::getTotal();
+
+        $data = array(
+            'nomor_transaksi'   => $nomor_transaksi,
+            'waktu_transaksi'   => date('Y-m-d H:i:s'),
+            'id_customer'       => $id_customer,
+            'telp'              => $request->telp,
+            'nama'              => $request->nama,
+            'alamat'            => $request->alamat,
+            'list_produk'       => json_encode($list_produk),
+            'sub_total'         => $sub_total,
+            'biaya_ongkir'      => $request->ongkir,
+            'diskon'            => $request->diskon,
+            'total_bayar'       => $sub_total + $request->ongkir - $request->diskon,
+            'status'            => $request->status,
+            'id_pembayaran'     => $request->pembayaran,
+            'bukti_pembayaran'  => "",
+            'kurir'             => $request->kurir,
+            'nomor_resi'        => "",
+            'tracking'          => "",
+        );
+
+        Transaksi::create($data); 
+        
+        $this->swal("transaksi", "created");
+        
+        return redirect('admin/transaksi');
+    }
+
+    function detailTransaksi($nomor_transaksi)
+    {
+        $data = Transaksi::find($nomor_transaksi);
+
+        $data_pembayaran        = Pembayaran::find($data->id_pembayaran);
+        $data['pembayaran']     = empty($data->id_pembayaran)?"Tunai":$data_pembayaran->nama_pembayaran;
+        $data['list_produk']    = json_decode($data->list_produk);
+        $data['status_trx']     = $this->status_trx;
+        $data['arr_status']     = [
+            "0" => [
+                ["status" => 1, "label" => "SET LUNAS", "class" => "success"],
+                ["status" => 2, "label" => "SET BATAL", "class" => "danger"],
+            ],
+            "6" => [
+                ["status" => 1, "label" => "VERIFIKASI PEMBAYARAN", "class" => "success"],
+                ["status" => 2, "label" => "SET BATAL", "class" => "danger"],
+            ],
+            "1" => [
+                ["status" => 3, "label" => "SET DIPROSES", "class" => "info"],
+                ["status" => 5, "label" => "SET SELESAI", "class" => "success"],
+            ],
+            "2" => [],
+            "3" => [
+                ["status" => 4, "label" => "SET DIKIRIM", "class" => "info"],
+                ["status" => 5, "label" => "SET SELESAI", "class" => "success"],
+            ],
+            "4" => [
+                ["status" => 5, "label" => "SET SELESAI", "class" => "success"],
+            ],
+            "5" => [],
+        ];
+        
         return view('admin/pages/transaksi_detail', $data);
+    }
+
+    function setStatusTransaksi(Request $request)
+    {
+        $data = [
+            'status' => $request->status
+        ];
+
+        Transaksi::find($request->id)->update($data);
+    }
+    
+    function deleteTransaksi(Request $request)
+    {
+        $data = Transaksi::find($request->id);
+
+        // restore stok produk
+        $arr_produk = json_decode($data->list_produk);
+        foreach($arr_produk as $produk)
+        {
+            $this->classProduk->updateStok($produk->id, $produk->quantity);
+        }
+        
+        $delete = $data->delete();
+
+        return response()->json($delete);
     }
 
     function ulasan()
@@ -304,13 +441,8 @@ class AdminController extends Controller
 
     function getDataCustomerByTelp(Request $request)
     {
-        $data = Customer::where('phone', $request->telp)->first();
+        $data = Customer::with('kota')->where('phone', $request->telp)->first();
         
-        if(!$data)
-        {
-            $data = CustomerAddress::where('phone', $request->telp)->first();
-        }
-
         return response()->json($data);
     }
 
@@ -383,5 +515,38 @@ class AdminController extends Controller
         }
 
         return response()->json($ret);
+    }
+
+    function getKotaByProvinsi(Request $request)
+    {
+        $data = Kota::with('provinsi')->where('id_provinsi', $request->id)->orderBy('nama_kota')->get();
+        
+        return response()->json($data);
+    }
+    
+    function getLayananKurir(Request $request)
+    {
+        $kota_asal      = 23; //KOTA BANDUNG
+        $kota_tujuan    = !empty($request->kota_tujuan)?$request->kota_tujuan:152; //JAKPUS
+
+        $response = Http::post($this->url_api."/cost", [
+            'key'           => $this->api_key,
+            'origin'        => $kota_asal,
+            'destination'   => $kota_tujuan,
+            'weight'        => 1000,
+            'courier'       => $request->kurir
+        ]);
+
+        $data = [];
+        foreach($response['rajaongkir']['results'][0]['costs'] as $value)
+        {
+            $data[] = [
+                "kode"      => $value['service'],
+                "nama"      => $value['description'] . " (" . $value['service'] . ")",
+                "ongkir"    => $value['cost'][0]['value']
+            ];
+        }
+
+        return response()->json($data);
     }
 }

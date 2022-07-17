@@ -257,13 +257,14 @@
                 $("#kondisi").val(data.kondisi);
                 $("#jenis").val(data.jenis);
                 $("#berat").val(data.berat);
+                $("#warna").val(data.warna);
+                $('#ukuran').val(data.arr_ukuran).trigger('change');
                 $("#harga").val(data.harga);
                 $("#deskripsi").val(data.deskripsi);
                 $("#stok").val(data.stok);
                 $("#aktif").val(is_aktif);
                 $("#old_icon").val(data.gambar);
                 $("#icon_src").attr("src", "{{ URL::asset('images/produk') }}" + "/" + data.gambar);
-
                 showInputBarang();
             }
         });
