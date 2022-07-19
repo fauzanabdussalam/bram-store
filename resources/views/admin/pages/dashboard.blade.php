@@ -77,6 +77,24 @@
                         </thead>                  
                         <tbody>
                             @foreach($transaksi as $data)
+                            @php 
+                                if($data->status == 0)
+                                {
+                                    $label_bg   = "label-default";
+                                }
+                                elseif ($data->status == 1 || $data->status == 5) 
+                                { 
+                                    $label_bg   = "label-success";
+                                }
+                                elseif($data->status == 2)
+                                {
+                                    $label_bg   = "label-danger";
+                                }
+                                else
+                                {
+                                    $label_bg   = "label-info";
+                                }
+                            @endphp
                             <tr class="gradeX">
                                 <td>{{ $data->nomor_transaksi }}</td>
                                 <td>{{ date("d-m-Y H:i", strtotime($data->waktu_transaksi)) }}</td>
@@ -95,7 +113,7 @@
                                     @endphp
                                 </td>
                                 <td>{{ "Rp " . number_format($data->total_bayar, 0, ',', ".") }}</td>
-                                <td>{{ $status_trx[$data->status] }}</td>
+                                <td><label class="label {{ $label_bg }}">{{ $status_trx[$data->status] }}</label></td>
                             </tr>
                             @endforeach
                         </tbody>
