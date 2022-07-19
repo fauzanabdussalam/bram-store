@@ -54,6 +54,18 @@
                                     {{ $alamat }}
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 control-label">Rating Pelanggan : </label>
+                                <div class="col-md-8 form-control-static">
+                                    {{ !empty($ulasan)?$ulasan->nilai . "/5":"-" }}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 control-label">Ulasan Pelanggan : </label>
+                                <div class="col-md-8 form-control-static">
+                                {{ !empty($ulasan)?$ulasan->ulasan:"-" }}
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-sm-6">    
@@ -97,12 +109,19 @@
                                 <label class="col-md-4 control-label">Kurir : </label>
                                 <div class="col-md-8 form-control-static">
                                     {{ !empty($kurir)?strtoupper($kurir):"-" }}
+                                    <input type="hidden" id="kurir" name="kurir" value="{{ $kurir }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <label class="col-md-4 control-label">Layanan Kurir : </label>
                                 <div class="col-md-8 form-control-static">
                                     {{ !empty($layanan_kurir)?strtoupper($layanan_kurir):"-" }}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 control-label">Nomor Resi : </label>
+                                <div class="col-md-8 form-control-static">
+                                    {{ !empty($nomor_resi)?$nomor_resi:"-" }}
                                 </div>
                             </div>
                         </div>
@@ -160,9 +179,52 @@
     </div> 
 </div>  
 
+<div id="show_resi" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog"> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+                <h4 class="modal-title">SET STATUS DIKIRIM</h4> 
+            </div> 
+            
+            <form method="post" enctype="multipart/form-data" id="finput">
+                {{ csrf_field() }}
+                <div class="modal-body">
+                    <div class="row"> 
+                        <div class="col-md-12"> 
+                            <div class="form-group"> 
+                                <label class="control-label">Nomor Resi</label>
+                                <input class="form-control" id="nomor_resi" name="nomor_resi" placeholder="Nomor Resi">
+                            </div> 
+                        </div> 
+                    </div>
+                </div>
+                <div class="modal-footer"> 
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close <i class="fa fa-close"></i></button> 
+                    <button type="button" class="btn btn-primary waves-effect waves-light" onclick="setStatus(4, false)">Save <i class="fa fa-save"></i></button> 
+                </div> 
+            </form>
+        </div>
+    </div>
+</div><!-- /.modal -->
+
 <script>
-    function setStatus(status)
+    function setStatus(status, show_dlg_resi=true)
     {
+        if(status == 4 && $("#kurir").val() != "")
+        {
+            if(show_dlg_resi)
+            {
+                $('#show_resi').modal('show');
+                return false;   
+            }
+            else if(!show_dlg_resi && $("#nomor_resi").val() == "")
+            {
+                alert("Nomor Resi harus diisi");
+                return false;
+            }
+        }
+
         if(!confirm("Apakah anda yakin?")) 
         {
             return false;
@@ -176,6 +238,7 @@
             {
                 id: $("#nomor_transaksi").val(),
                 status: status,
+                nomorresi: $("#nomor_resi").val(),
                 _token: '{{csrf_token()}}'
             },
             success: function (response)

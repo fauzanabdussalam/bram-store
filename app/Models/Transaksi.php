@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use App\Models\Produk;
+use App\Models\Ulasan;
 
 class Transaksi extends Model
 {
@@ -35,6 +36,11 @@ class Transaksi extends Model
         'nomor_resi',
         'tracking'
     ];
+
+    public function ulasan()
+    {
+        return $this->hasOne(Ulasan::class);
+    }
 
     public function generateNomorTransaksi()
     {

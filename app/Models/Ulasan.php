@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\Transaksi;
 
 class Ulasan extends Model
 {
@@ -11,6 +12,8 @@ class Ulasan extends Model
     public $timestamps      = false;
     protected $table        = 'ulasan';
     protected $primaryKey   = 'nomor_transaksi';
+    protected $keyType      = 'string';
+    public $incrementing    = false;
 
     protected $fillable = [
         'nilai', 
@@ -18,6 +21,11 @@ class Ulasan extends Model
         'gambar',
         'created_at'
     ];
+
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi::class, 'nomor_transaksi');
+    }
 
     public function getNextId() 
     {

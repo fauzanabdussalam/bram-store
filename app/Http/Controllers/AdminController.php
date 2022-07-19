@@ -313,6 +313,12 @@ class AdminController extends Controller
 
         $sub_total = \Cart::getTotal();
 
+        $tracking = [];
+        if($request->status == 1)
+        {
+            $tracking[] = ["time" => date('Y-m-d H:i:s'), "text" => "Pembayaran sudah diverifikasi"];
+        }
+
         $data = array(
             'nomor_transaksi'   => $nomor_transaksi,
             'waktu_transaksi'   => date('Y-m-d H:i:s'),
@@ -330,7 +336,7 @@ class AdminController extends Controller
             'bukti_pembayaran'  => "",
             'kurir'             => $request->kurir,
             'nomor_resi'        => "",
-            'tracking'          => "",
+            'tracking'          => json_encode($tracking),
         );
 
         Transaksi::create($data); 
@@ -347,7 +353,13 @@ class AdminController extends Controller
         $data_pembayaran        = Pembayaran::find($data->id_pembayaran);
         $data['pembayaran']     = empty($data->id_pembayaran)?"Tunai":$data_pembayaran->nama_pembayaran;
         $data['list_produk']    = json_decode($data->list_produk);
+        $data['ulasan']         = Ulasan::find($nomor_transaksi);
         $data['status_trx']     = $this->status_trx;
+
+        $arr_status_dikirim = ["status" => 4, "label" => "SET DIKIRIM", "class" => "info"];
+        $arr_status_selesai = ["status" => 5, "label" => "SET SELESAI", "class" => "success"];
+        $arr_status_3       = !empty($data->kurir)?[$arr_status_dikirim, $arr_status_selesai]:[$arr_status_selesai];
+
         $data['arr_status']     = [
             "0" => [
                 ["status" => 1, "label" => "SET LUNAS", "class" => "success"],
@@ -359,15 +371,12 @@ class AdminController extends Controller
             ],
             "1" => [
                 ["status" => 3, "label" => "SET DIPROSES", "class" => "info"],
-                ["status" => 5, "label" => "SET SELESAI", "class" => "success"],
+                $arr_status_selesai,
             ],
             "2" => [],
-            "3" => [
-                ["status" => 4, "label" => "SET DIKIRIM", "class" => "info"],
-                ["status" => 5, "label" => "SET SELESAI", "class" => "success"],
-            ],
+            "3" => $arr_status_3,
             "4" => [
-                ["status" => 5, "label" => "SET SELESAI", "class" => "success"],
+                $arr_status_selesai,
             ],
             "5" => [],
         ];
@@ -377,8 +386,23 @@ class AdminController extends Controller
 
     function setStatusTransaksi(Request $request)
     {
+        $data_trx = Transaksi::find($request->id);
+
+        $arr_text_status = [
+            "1" => "Pembayaran sudah diverifikasi",
+            "2" => "Transaksi dibatalkan",
+            "3" => "Pesanan sedang diproses",
+            "4" => "Pesanan telah dikirim",
+            "5" => "Transaksi selesai",
+        ];
+
+        $tracking   = !empty($data_trx->tracking)?json_decode($data_trx->tracking):[];
+        $tracking[] = ["time" => date('Y-m-d H:i:s'), "text" => $arr_text_status[$request->status]];
+
         $data = [
-            'status' => $request->status
+            'status'        => $request->status,
+            'nomor_resi'    => $request->nomorresi,
+            'tracking'      => json_encode($tracking),
         ];
 
         Transaksi::find($request->id)->update($data);
@@ -402,7 +426,7 @@ class AdminController extends Controller
 
     function ulasan()
     {
-        $data = Ulasan::with('customer', 'produk')->get();
+        $data = Ulasan::with('transaksi')->get();
       
         return view('admin/pages/ulasan', ['ulasan' => $data]);
     }
