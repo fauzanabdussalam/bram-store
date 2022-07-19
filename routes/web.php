@@ -71,7 +71,6 @@ Route::group(['prefix' => 'admin'], function ()
     Route::group(['prefix' => 'ulasan'], function () 
     {
         Route::get('/', [AdminController::class, 'ulasan'])->name('ulasan');
-        Route::post('data', [AdminController::class, 'getDataUlasan'])->name('ulasan.data');
     });
 
     Route::group(['prefix' => 'customer'], function () 

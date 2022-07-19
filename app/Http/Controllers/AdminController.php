@@ -57,9 +57,9 @@ class AdminController extends Controller
         $data['total_kategori']     = Kategori::all()->count();
         $data['total_produk']       = Produk::all()->count();
         $data['total_pelanggan']    = Customer::all()->count();
-        $data['total_pengguna']     = User::all()->count();
-
-        // $news = News::with("category", "user")->whereBetween('created_at', [date("Y-m-d")." 00:00:00", date("Y-m-d")." 23:59:59"])->get();
+        $data['total_pengguna']     = User::all()->count();        
+        $data['transaksi']          = Transaksi::whereBetween('waktu_transaksi', [date("Y-m-d")." 00:00:00", date("Y-m-d")." 23:59:59"])->get();
+        $data['status_trx']         = $this->status_trx;
 
         return view('admin/pages/dashboard', $data);
     }
@@ -429,13 +429,6 @@ class AdminController extends Controller
         $data = Ulasan::with('transaksi')->get();
       
         return view('admin/pages/ulasan', ['ulasan' => $data]);
-    }
-
-    function getDataUlasan(Request $request)
-    {
-        $data = Ulasan::find($request->id);
-
-        return response()->json($data);
     }
 
     function customer()

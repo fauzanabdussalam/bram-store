@@ -60,26 +60,49 @@
 
             <div class="panel panel-default">    
                 <div class="panel-heading">
-                    <h3 class="panel-title">Today's News</h3>
+                    <h3 class="panel-title">Transaksi Hari Ini</h3>
                 </div>      
                 <div class="panel-body">
                     <table class="table table-bordered table-striped" id="datatable">
                         <thead>
                             <tr>
-                                <th>Created</th>
-                                <th>Creator</th>
-                                <th>Title</th>
-                                <th>Category</th>
-                                <th></th>
+                                <th>Nomor <br> Transaksi</th>
+                                <th>Waktu <br> Transaksi</th>
+                                <th>Nama <br> Pelanggan</th>
+                                <th>Telp <br> Pelanggan</th>
+                                <th>Produk</th>
+                                <th>Total Bayar</th>
+                                <th>Status</th>
                             </tr>
                         </thead>                  
-                        <!-- <tbody>
-                          
-                        </tbody> -->
+                        <tbody>
+                            @foreach($transaksi as $data)
+                            <tr class="gradeX">
+                                <td>{{ $data->nomor_transaksi }}</td>
+                                <td>{{ date("d-m-Y H:i", strtotime($data->waktu_transaksi)) }}</td>
+                                <td>{{ $data->nama }}</td>
+                                <td>{{ $data->telp }}</td>
+                                <td>
+                                    @php
+                                        $arr_produk  = json_decode($data->list_produk);
+                                        $list_produk = "";
+                                        foreach($arr_produk as $produk)
+                                        {
+                                            $qty = (!$produk->jenis_kategori)?"($produk->quantity pcs)":"";
+                                            $list_produk .= "- $produk->name $qty <br>";
+                                        }
+                                        echo $list_produk;
+                                    @endphp
+                                </td>
+                                <td>{{ "Rp " . number_format($data->total_bayar, 0, ',', ".") }}</td>
+                                <td>{{ $status_trx[$data->status] }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                     <hr>
                     <div style="float: right">
-                        <!-- <a href="" class="btn btn-icon btn-sm btn-primary">SEE ALL NEWS <i class="fa fa-arrow-right"></i></i></a> -->
+                        <a href="{{ Route('transaksi') }}" class="btn btn-icon btn-sm btn-primary">LIHAT SEMUA TRANSAKSI <i class="fa fa-arrow-right"></i></i></a>
                     </div>
                 </div>
                 <!-- end: page -->
