@@ -124,6 +124,23 @@
                                     {{ !empty($nomor_resi)?$nomor_resi:"-" }}
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 control-label">Tracking : </label>
+                                <div class="col-md-8 form-control-static" style="height: 150px; overflow: auto;background-color: #f2f2f2;">
+                                    <table>
+                                        @foreach($tracking as $value)
+                                            <tr>
+                                                <td>
+                                                    <b>{{ $value->text }}</b>
+                                                    <br>
+                                                    {{ date("d-m-Y H:i:s", strtotime($value->time)) }}
+                                                    <br><br>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row"> 
