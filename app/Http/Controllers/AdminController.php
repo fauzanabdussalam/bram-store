@@ -50,6 +50,8 @@ class AdminController extends Controller
             // ["kode" => "pos", "nama" => "POS"],
             ["kode" => "tiki", "nama" => "TIKI"],
         ];
+
+        $this->classTransaksi->batalkanTransaksiExpired();
     }
 
     function index()
@@ -411,6 +413,16 @@ class AdminController extends Controller
             'nomor_resi'    => $request->nomorresi,
             'tracking'      => json_encode($tracking),
         ];
+
+        if($request->status == 2)
+        {
+            // restore stok produk
+            $arr_produk = json_decode($data_trx->list_produk);
+            foreach($arr_produk as $produk)
+            {
+                $this->classProduk->updateStok($produk->id, $produk->quantity);
+            }
+        }
 
         Transaksi::find($request->id)->update($data);
     }

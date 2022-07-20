@@ -125,4 +125,31 @@ class Transaksi extends Model
 
         return $data;
     }
+
+    public function batalkanTransaksiExpired()
+    {
+        $classProduk = new Produk();
+
+        $trx = Transaksi::where('pembayaran_expired', '<', date('Y-m-d H:i:s'))->get();
+
+        foreach($trx as $data_trx)
+        {
+            // restore stok produk
+            $arr_produk = json_decode($data_trx->list_produk);
+            foreach($arr_produk as $produk)
+            {
+                $classProduk->updateStok($produk->id, $produk->quantity);
+            }
+
+            $tracking   = !empty($data_trx->tracking)?json_decode($data_trx->tracking):[];
+            $tracking[] = ["time" => date('Y-m-d H:i:s'), "text" => "Transaksi dibatalkan"];
+
+            $data = [
+                'status'        => 2,
+                'tracking'      => json_encode($tracking),
+            ];
+    
+            Transaksi::find($data_trx->nomor_transaksi)->update($data);
+        }
+    }
 }

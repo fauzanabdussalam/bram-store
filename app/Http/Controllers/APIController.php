@@ -37,6 +37,8 @@ class APIController extends Controller
             '4' => 'Dikirim', 
             '5' => 'Selesai'
         ];
+        
+        $this->classTransaksi->batalkanTransaksiExpired();
     }
 
     function getProfileCustomer()
@@ -527,6 +529,35 @@ class APIController extends Controller
             ];
     
             Transaksi::find($request->nomor_transaksi)->update($data);
+        }
+
+        $ret['status']  = "success";
+        $ret['data']    = $request->nomor_transaksi;
+
+        return response()->json($ret);
+    }
+
+    function setBatalTransaksi(Request $request)
+    {
+        $data_trx = Transaksi::find($request->nomor_transaksi);
+
+        if($data_trx->status != 2)
+        {
+            $arr_produk = json_decode($data_trx->list_produk);
+            foreach($arr_produk as $produk)
+            {
+                $this->classProduk->updateStok($produk->id, $produk->quantity);
+            }
+
+            $tracking   = !empty($data_trx->tracking)?json_decode($data_trx->tracking):[];
+            $tracking[] = ["time" => date('Y-m-d H:i:s'), "text" => "Transaksi dibatalkan"];
+
+            $data = [
+                'status'    => 2,
+                'tracking'  => json_encode($tracking),
+            ];
+        
+            Transaksi::find($data_trx->nomor_transaksi)->update($data);
         }
 
         $ret['status']  = "success";
