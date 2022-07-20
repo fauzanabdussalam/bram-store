@@ -33,6 +33,7 @@ class CreateTransaksiTable extends Migration
             $table->string('layanan_kurir', 50)->nullable();
             $table->string('nomor_resi', 20)->nullable();
             $table->text('tracking')->nullable();
+            $table->timestamp('pembayaran_expired')->nullable();
         });
     }
 

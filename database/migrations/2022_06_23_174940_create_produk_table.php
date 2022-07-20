@@ -27,6 +27,7 @@ class CreateProdukTable extends Migration
             $table->text('deskripsi')->nullable();
             $table->text('gambar')->nullable();
             $table->integer('stok')->default(0);
+            $table->timestamp('created_at');
         });
     }
 

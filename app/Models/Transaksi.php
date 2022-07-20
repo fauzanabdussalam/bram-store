@@ -34,7 +34,8 @@ class Transaksi extends Model
         'bukti_pembayaran',
         'kurir',
         'nomor_resi',
-        'tracking'
+        'tracking',
+        'pembayaran_expired'
     ];
 
     public function ulasan()

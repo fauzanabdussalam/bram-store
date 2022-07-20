@@ -27,138 +27,17 @@ class APIController extends Controller
 
         $this->url_api = 'https://api.rajaongkir.com/starter/';
         $this->api_key = '19ddbb5173b42a658d9e8b5f48a2b2b4';
+
+        $this->status_trx   = [
+            '0' => 'Belum Dibayar', 
+            '6' => 'Menunggu Verifikasi', 
+            '1' => 'Lunas', 
+            '2' => 'Batal', 
+            '3' => 'Diproses', 
+            '4' => 'Dikirim', 
+            '5' => 'Selesai'
+        ];
     }
-
-    // function getQuotes()
-    // {
-    //     $data = Quotes::all()->random(1);
-
-    //     $ret['status']  = "success";
-    //     $ret['data']    = $data;
-
-    //     return response()->json($ret);
-    // }
-
-    // function getDataActivity(Request $request)
-    // {
-    //     $classActivity = new Activity();
-
-    //     $date           = !empty($request->date)?$request->date:date("Y-m-d");
-    //     $id_customer    = Auth::user()->id;
-
-    //     $trackers   = $classActivity->getTracker($date, $id_customer)->get();
-    //     $tracker    = [];
-    //     foreach($trackers as $row)
-    //     {
-    //         $tracker[$row->id_activity] = 1;
-    //     }
-
-    //     $activities = Activity::orderBy('order')->get();
-    //     foreach($activities as $row)
-    //     {
-    //         $data[] = [
-    //             'id'            => $row->id,
-    //             'activity_name' => $row->activity_name,
-    //             'icon'          => URL::asset('images/activity').'/'.$row->icon,
-    //             'checked'       => isset($tracker[$row->id])?1:0
-    //         ];
-    //     }
-
-    //     $ret['status']  = "success";
-    //     $ret['data']    = $data;
-
-    //     return response()->json($ret);
-    // }
-
-    // function setCheckActivity(Request $request)
-    // {
-    //     $classActivity  = new Activity();
-
-    //     $date           = !empty($request->date)?$request->date:date("Y-m-d");
-    //     $id_customer    = Auth::user()->id;
-
-    //     $update = $classActivity->checklistTracker($date, $id_customer, $request->id_activity, $request->checked);
-
-    //     $ret['status']  = "success";
-        
-    //     return response()->json($ret);
-    // }
-
-    // function getDataNews(Request $request)
-    // {
-    //     $news = News::with("category", "user")->select('news.*', 'category_name')->leftJoin('category', 'news.id_category', '=', 'category.id_category');
-    //     $news = ($request->exists('id_category') && $request->id_category!="")?$news->where('news.id_category', $request->id_category):$news;
-    //     $news = ($request->exists('keyword') && $request->keyword)?$news->where('title', 'LIKE', '%'.$request->keyword.'%')->orWhere('category_name', 'LIKE', '%'.$request->keyword.'%'):$news;
-    //     $news = $news->orderBy('created_at', 'desc')->get();
-
-    //     $data = [];
-    //     foreach($news as $row)
-    //     {
-    //         $data[] = [
-    //             "id_news"       => $row->id_news,
-    //             "title"         => $row->title,
-    //             'category_name' => $row->category_name,
-    //             'thumbnail'     => URL::asset('images/news').'/'.$row->thumbnail,
-    //         ];
-    //     }
-
-    //     $ret['status']  = "success";
-    //     $ret['data']    = $data;
-
-    //     return response()->json($ret);
-    // }
-
-    // function getRecommendedNews(Request $request)
-    // {
-    //     $news = News::with("category", "user")
-    //             ->select('news.*', 'category_name')
-    //             ->leftJoin('category', 'news.id_category', '=', 'category.id_category')
-    //             ->where('is_recommended', 1)
-    //             ->orderBy('created_at', 'desc')
-    //             ->offset(0)
-    //             ->limit($request->limit)
-    //             ->get();
-
-    //     $data = [];
-    //     foreach($news as $row)
-    //     {
-    //         $data[] = [
-    //             "id_news"       => $row->id_news,
-    //             "title"         => $row->title,
-    //             'category_name' => $row->category_name,
-    //             'thumbnail'     => URL::asset('images/news').'/'.$row->thumbnail,
-    //         ];
-    //     }
-
-    //     $ret['status']  = "success";
-    //     $ret['data']    = $data;
-
-    //     return response()->json($ret);
-    // }
-
-    // function getDetailNews(Request $request)
-    // {
-    //     $data = News::with("category", "user")
-    //     ->select('news.*', 'category_name')
-    //     ->leftJoin('category', 'news.id_category', '=', 'category.id_category')
-    //     ->where('id_news', $request->id_news)
-    //     ->first();
-        
-    //     if(!empty($data))
-    //     {
-    //         $data->thumbnail = URL::asset('images/news').'/'.$data->thumbnail;
-
-    //         $ret['status']  = "success";
-    //         $ret['data']    = $data;
-    //     }
-    //     else
-    //     {
-    //         $ret['status']  = "error";
-    //         $ret['message'] = "News Not Found!";
-    //     }
-
-    //     return response()->json($ret);
-    // }
 
     function getProfileCustomer()
     {
@@ -271,16 +150,41 @@ class APIController extends Controller
         return response()->json($ret);
     }
 
+    function getSortProduk()
+    {
+        $data = ["Pembelian", "Ulasan", "Terbaru", "Harga Tertinggi", "Harga Terendah"];
+
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
     function getProduk(Request $request)
     {
         $produk = Produk::with("kategori")->select('produk.*', 'nama_kategori', 'kategori.jenis AS jenis_produk')->leftJoin('kategori', 'produk.id_kategori', '=', 'kategori.id')->where('stok', '>', 0);
         $produk = ($request->exists('id_kategori') && $request->id_kategori!="")?$produk->where('produk.id_kategori', $request->id_kategori):$produk;
-        $produk = ($request->exists('keyword') && $request->keyword)?$produk->where('nama_produk', 'LIKE', '%'.$request->keyword.'%')->orWhere('nama_kategori', 'LIKE', '%'.$request->keyword.'%'):$produk;
-        $produk = $produk->orderBy('nama_produk', 'desc')->get();
+        $produk = ($request->exists('keyword') && $request->keyword!="")?$produk->where('nama_produk', 'LIKE', '%'.$request->keyword.'%')->orWhere('nama_kategori', 'LIKE', '%'.$request->keyword.'%'):$produk;
+        $sort = ($request->exists('sort') && $request->sort!="")?$request->sort:0;
+
+        if(in_array($sort, [2,3,4]))
+        {
+            $data_sort = [
+                "2" => ["field" => "created_at", "order" => "desc"],
+                "3" => ["field" => "harga", "order" => "desc"],
+                "4" => ["field" => "harga", "order" => "asc"],
+            ];
+    
+            $produk = $produk->orderBy($data_sort[$sort]['field'], $data_sort[$sort]['order']);
+        }
+
+        $produk = $produk->limit(20)->get();
 
         $data = [];
         foreach($produk as $row)
         {
+            $data_trx = $this->classProduk->getTransaksiProduk($row->id);
+
             $data[] = [
                 "id"                => $row->id,
                 "nama_produk"       => $row->nama_produk,
@@ -291,8 +195,19 @@ class APIController extends Controller
                 "ukuran"            => empty($row->ukuran)?[]:explode(",", $row->ukuran),
                 "harga"             => (int)$row->harga,
                 "gambar"            => URL::asset('images/produk').'/'.$row->gambar,
-                "stok"              => $row->stok
+                "stok"              => $row->stok,
+                "jumlah_pembelian"  => $data_trx['jumlah_pembelian'],
+                "rating"            => $data_trx['rating'],
             ];
+        }
+
+        if($sort == 0)
+        {
+            array_multisort(array_column($data, "jumlah_pembelian"), SORT_DESC, $data);
+        }
+        elseif($sort == 1)
+        {
+            array_multisort(array_column($data, "rating"), SORT_DESC, $data);
         }
 
         $ret['status']  = "success";
@@ -304,6 +219,8 @@ class APIController extends Controller
     function getDetailProduk(Request $request)
     {
         $row = Produk::with('kategori')->find($request->id);
+
+        $data_trx = $this->classProduk->getTransaksiProduk($request->id);
         
         $data[] = [
             "id"                => $row->id,
@@ -318,7 +235,9 @@ class APIController extends Controller
             "harga"             => (int)$row->harga,
             "deskripsi"         => $row->deskripsi,
             "gambar"            => URL::asset('images/produk').'/'.$row->gambar,
-            "stok"              => $row->stok
+            "stok"              => $row->stok,
+            "jumlah_pembelian"  => $data_trx['jumlah_pembelian'],
+            "rating"            => $data_trx['rating'],
         ];
 
         $ret['status']  = "success";
@@ -371,9 +290,9 @@ class APIController extends Controller
     {
         $response = Http::post($this->url_api."/cost", [
             'key'           => $this->api_key,
-            'origin'        => $request->id_kota_asal,
-            'destination'   => $request->id_kota_tujuan,
-            'weight'        => $request->berat,
+            'origin'        => 23,
+            'destination'   => auth()->user()->city,
+            'weight'        => 1000,
             'courier'       => $request->kurir
         ]);
 
@@ -425,7 +344,6 @@ class APIController extends Controller
             'qty_produk'        => 'required|string',
             'kurir'             => 'required|string',
             'layanan_kurir'     => 'required|string',
-            'pembayaran'        => 'required',
         ]);
         
         if($validator->fails())
@@ -433,6 +351,18 @@ class APIController extends Controller
             $response = [
                 'status'    => 'error',
                 'message'   => $validator->errors()->first()
+            ];
+
+            return response()->json($response, 400);       
+        }
+
+        // CEK TRX YANG BELUM DIBAYAR
+        $trx = Transaksi::where('id_customer', auth()->user()->id)->where('status', 0)->first();
+        if($trx)
+        {
+            $response = [
+                'status'    => 'error',
+                'message'   => 'Anda memiliki transaksi yang belum dibayar, silahkan lakukan pembayaran terlebih dahulu'
             ];
 
             return response()->json($response, 400);       
@@ -470,9 +400,9 @@ class APIController extends Controller
             "layanan_kurir" => $request->layanan_kurir
         ];
 
-        $data_total = $this->classTransaksi->hitungTotal($parameter);
-
-        $customer = auth()->user();
+        $data_total         = $this->classTransaksi->hitungTotal($parameter);
+        $customer           = auth()->user();
+        $pembayaran_expired = date("Y-m-d H:i:s", strtotime("+1 day"));
 
         $data = array(
             'nomor_transaksi'   => $nomor_transaksi,
@@ -493,22 +423,114 @@ class APIController extends Controller
             'layanan_kurir'     => $request->layanan_kurir,
             'nomor_resi'        => "",
             'tracking'          => "",
+            'pembayaran_expired'=> $pembayaran_expired,
         );
 
         Transaksi::create($data); 
 
         $ret['status']  = "success";
-        $ret['data']    = $nomor_transaksi;
+        $ret['data']    = ["nomor_transaksi" => $nomor_transaksi, "pembayaran_expired" => $pembayaran_expired];
 
         return response()->json($ret);
     }
 
     function listTransaksi()
     {
-        $data = Transaksi::where('id_customer', auth()->user()->id)->get();
+        $list_trx = Transaksi::where('id_customer', auth()->user()->id)->orderBy('waktu_transaksi', 'desc')->get();
+
+        $data = [];
+        foreach($list_trx as $data_trx)
+        {
+            $data[] = [
+                "nomor_transaksi"   => $data_trx->nomor_transaksi,
+                "waktu_transaksi"   => $data_trx->waktu_transaksi,
+                "status"            => $this->status_trx[$data_trx->status],
+                "total_bayar"       => $data_trx->total_bayar,
+                "pembayaran_expired"=> $data_trx->pembayaran_expired,
+            ];
+        }
 
         $ret['status']  = "success";
         $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function detailTransaksi(Request $request)
+    {
+        $data = Transaksi::find($request->nomor_transaksi);
+        
+        $data['status']         = $this->status_trx[$data->status];
+        $data['list_produk']    = json_decode($data->list_produk);
+        $data['tracking']       = array_reverse(json_decode($data->tracking));
+        
+        $ret['status']  = "success";
+        $ret['data']    = $data;
+
+        return response()->json($ret);
+    }
+
+    function uploadPembayaranTransaksi(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'nomor_transaksi'   => 'required|string',
+            'pembayaran'        => 'required',
+            'bukti_pembayaran'  => 'required'
+        ]);
+        
+        if($validator->fails())
+        {
+            $response = [
+                'status'    => 'error',
+                'message'   => $validator->errors()->first()
+            ];
+
+            return response()->json($response, 400);       
+        }
+        
+        $data_trx = Transaksi::find($request->nomor_transaksi);
+
+        if($data_trx->status == 0)
+        {
+            $tracking   = !empty($data_trx->tracking)?json_decode($data_trx->tracking):[];
+            $tracking[] = ["time" => date('Y-m-d H:i:s'), "text" => "Menunggu Pembayaran Diverifikasi"];
+
+            $data = [
+                'status'            => 6,
+                'id_pembayaran'     => $request->pembayaran,
+                'bukti_pembayaran'  => $request->bukti_pembayaran,
+                'tracking'          => json_encode($tracking),
+            ];
+
+            Transaksi::find($request->nomor_transaksi)->update($data);
+        }
+
+        $ret['status']  = "success";
+        $ret['data']    = $request->nomor_transaksi;
+
+        return response()->json($ret);
+    }
+
+    function setSelesaiTransaksi(Request $request)
+    {
+        $data_trx = Transaksi::find($request->nomor_transaksi);
+
+        if($data_trx->status == 3 || $data_trx->status == 4)
+        {
+            $tracking   = !empty($data_trx->tracking)?json_decode($data_trx->tracking):[];
+            $tracking[] = ["time" => date('Y-m-d H:i:s'), "text" => "Transaksi selesai"];
+    
+            $data = [
+                'status'        => 5,
+                'nomor_resi'    => $request->nomorresi,
+                'tracking'      => json_encode($tracking),
+            ];
+    
+            Transaksi::find($request->nomor_transaksi)->update($data);
+        }
+
+        $ret['status']  = "success";
+        $ret['data']    = $request->nomor_transaksi;
 
         return response()->json($ret);
     }

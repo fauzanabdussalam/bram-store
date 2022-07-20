@@ -290,7 +290,7 @@ class AdminController extends Controller
     {
         $nomor_transaksi = $this->classTransaksi->generateNomorTransaksi();
 
-        $data_customer  = Customer::find($request->telp);
+        $data_customer  = Customer::where('phone', $request->telp)->first();
         $id_customer    = ($data_customer)?$data_customer->id:null;
 
         $cart = \Cart::getContent();
@@ -313,10 +313,15 @@ class AdminController extends Controller
 
         $sub_total = \Cart::getTotal();
 
-        $tracking = [];
+        $tracking           = [];
+        $pembayaran_expired = null;
         if($request->status == 1)
         {
             $tracking[] = ["time" => date('Y-m-d H:i:s'), "text" => "Pembayaran sudah diverifikasi"];
+        }
+        else
+        {
+            $pembayaran_expired = date("Y-m-d H:i:s", strtotime("+1 day"));
         }
 
         $data = array(
@@ -337,6 +342,7 @@ class AdminController extends Controller
             'kurir'             => $request->kurir,
             'nomor_resi'        => "",
             'tracking'          => json_encode($tracking),
+            'pembayaran_expired'=> $pembayaran_expired
         );
 
         Transaksi::create($data); 
