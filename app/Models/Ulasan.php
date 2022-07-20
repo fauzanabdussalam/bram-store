@@ -16,6 +16,7 @@ class Ulasan extends Model
     public $incrementing    = false;
 
     protected $fillable = [
+        'nomor_transaksi', 
         'nilai', 
         'ulasan',
         'gambar',

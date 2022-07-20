@@ -64,6 +64,13 @@
                                 <label class="col-md-4 control-label">Ulasan Pelanggan : </label>
                                 <div class="col-md-8 form-control-static">
                                 {{ !empty($ulasan)?$ulasan->ulasan:"-" }}
+                                <br>
+                                @php 
+                                    if(!empty($ulasan->gambar))
+                                    {
+                                        echo "<a href='data:image/png;base64, $ulasan->gambar' class='image-popup' title='Ulasan'><img src='data:image/png;base64, $ulasan->gambar' class='thumb-img' alt='Ulasan' style='max-height: 100px'></a>";
+                                    }
+                                @endphp
                                 </div>
                             </div>
                         </div>

@@ -363,7 +363,7 @@ class AdminController extends Controller
         $data['list_produk']    = json_decode($data->list_produk);
         $data['ulasan']         = Ulasan::find($nomor_transaksi);
         $data['status_trx']     = $this->status_trx;
-        $data['tracking']       = array_reverse(json_decode($data->tracking));
+        $data['tracking']       = !empty($data->tracking)?array_reverse(json_decode($data->tracking)):[];
 
         $arr_status_dikirim = ["status" => 4, "label" => "SET DIKIRIM", "class" => "info"];
         $arr_status_selesai = ["status" => 5, "label" => "SET SELESAI", "class" => "success"];

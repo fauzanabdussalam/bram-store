@@ -16,6 +16,7 @@ use App\Models\Pembayaran;
 use App\Models\Provinsi;
 use App\Models\Kota;
 use App\Models\Transaksi;
+use App\Models\Ulasan;
 
 class APIController extends Controller
 {
@@ -464,7 +465,7 @@ class APIController extends Controller
         
         $data['status']         = $this->status_trx[$data->status];
         $data['list_produk']    = json_decode($data->list_produk);
-        $data['tracking']       = array_reverse(json_decode($data->tracking));
+        $data['tracking']       = !empty($data->tracking)?array_reverse(json_decode($data->tracking)):[];
         
         $ret['status']  = "success";
         $ret['data']    = $data;
@@ -558,6 +559,49 @@ class APIController extends Controller
             ];
         
             Transaksi::find($data_trx->nomor_transaksi)->update($data);
+        }
+
+        $ret['status']  = "success";
+        $ret['data']    = $request->nomor_transaksi;
+
+        return response()->json($ret);
+    }
+
+    function setUlasanTransaksi(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'nomor_transaksi'   => 'required|string',
+            'rating'            => 'required',
+            'ulasan'            => 'required'
+        ]);
+        
+        if($validator->fails())
+        {
+            $response = [
+                'status'    => 'error',
+                'message'   => $validator->errors()->first()
+            ];
+
+            return response()->json($response, 400);       
+        }
+
+        $ulasan = Ulasan::find($request->nomor_transaksi);
+
+        $data = [
+            "nomor_transaksi"   => $request->nomor_transaksi,
+            "nilai"             => $request->rating,
+            "ulasan"            => $request->ulasan,
+            "gambar"            => $request->gambar,
+            "created_at"        => empty($ulasan)?date("Y-m-d H:i:s"):$ulasan->created_at,
+        ];
+        
+        if(empty($ulasan))
+        {
+            Ulasan::create($data);
+        }
+        else
+        {
+            $ulasan->update($data);
         }
 
         $ret['status']  = "success";

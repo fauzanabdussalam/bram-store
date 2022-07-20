@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth:sanctum']], function ()
         Route::any('/pembayaran', [APIController::class, 'uploadPembayaranTransaksi']);
         Route::any('/selesai', [APIController::class, 'setSelesaiTransaksi']);
         Route::any('/batal', [APIController::class, 'setBatalTransaksi']);
+        Route::any('/ulasan', [APIController::class, 'setUlasanTransaksi']);
     });
     
 
